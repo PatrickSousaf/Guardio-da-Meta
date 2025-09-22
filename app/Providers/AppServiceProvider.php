@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 use App\Models\Curso;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,8 +22,8 @@ class AppServiceProvider extends ServiceProvider
 
             $event->menu->add([
                 'text' => 'Gerenciamento dos Anos',
-                'url'  => '/admin/cursos',
-                'icon' => 'fas fa-fw fa-lock',
+                'url'  => route('admin.cursos.index'),
+                'icon' => 'fas fa-fw fa-cog',
             ]);
 
             $anos = Curso::all()->groupBy('ano')->sortKeys();
@@ -34,10 +35,14 @@ class AppServiceProvider extends ServiceProvider
                     $submenu[] = [
                         'text' => $curso->nome,
                         'url'  => '#',
-                        'submenu' => collect(range(1, $curso->periodos))->map(function ($p) {
+                        'submenu' => collect(range(1, $curso->periodos))->map(function ($periodo) use ($curso, $ano) {
                             return [
-                                'text' => "{$p}º Período",
-                                'url'  => '#',
+                                'text' => "{$periodo}º Período",
+                                'url'  => route('admin.periodos.show', [
+                                    'curso' => $curso->id, // Usa ID em vez de slug
+                                    'ano' => $ano,
+                                    'periodo' => $periodo
+                                ]),
                             ];
                         })->toArray(),
                     ];
@@ -50,19 +55,20 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
 
-            $event->menu->add(['header' => 'account_settings']);
+            $event->menu->add(['header' => 'Configurações da Conta']);
 
             $event->menu->add([
-                'text' => 'profile',
-                'url'  => 'admin/settings',
+                'text' => 'Perfil',
+                'url'  => route('profile.edit'),
                 'icon' => 'fas fa-fw fa-user',
             ]);
 
             $event->menu->add([
-                'text' => 'change_password',
-                'url'  => 'admin/settings',
+                'text' => 'Alterar Senha',
+                'url'  => route('profile.edit'),
                 'icon' => 'fas fa-fw fa-lock',
             ]);
         });
     }
 }
+
