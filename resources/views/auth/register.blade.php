@@ -1,5 +1,9 @@
 @extends('adminlte::auth.auth-page', ['authType' => 'register'])
 
+@section('adminlte_css')
+    <link rel="stylesheet" href="{{ asset('css/auth-custom.css') }}">
+@stop
+
 @php
     $loginUrl = View::getSection('login_url') ?? config('adminlte.login_url', 'login');
     $registerUrl = View::getSection('register_url') ?? config('adminlte.register_url', 'register');
