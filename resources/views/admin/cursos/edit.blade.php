@@ -27,9 +27,6 @@
                 <div class="form-group">
                     <label for="periodos">Número de Períodos</label>
                     <select class="form-control" id="periodos" name="periodos" required>
-                        <option value="1" {{ $curso->periodos == 1 ? 'selected' : '' }}>1 Período</option>
-                        <option value="2" {{ $curso->periodos == 2 ? 'selected' : '' }}>2 Períodos</option>
-                        <option value="3" {{ $curso->periodos == 3 ? 'selected' : '' }}>3 Períodos</option>
                         <option value="4" {{ $curso->periodos == 4 ? 'selected' : '' }}>4 Períodos</option>
                     </select>
                 </div>

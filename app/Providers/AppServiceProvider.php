@@ -32,19 +32,32 @@ class AppServiceProvider extends ServiceProvider
                 $submenu = [];
 
                 foreach ($cursos as $curso) {
+                    // Submenus dos períodos
+                    $periodosSubmenu = collect(range(1, $curso->periodos))->map(function ($periodo) use ($curso, $ano) {
+                        return [
+                            'text' => "{$periodo}º Período",
+                            'url'  => route('admin.periodos.show', [
+                                'curso' => $curso->id,
+                                'ano' => $ano,
+                                'periodo' => $periodo
+                            ]),
+                        ];
+                    })->toArray();
+
+                    // Adiciona o menu Comparativo
+                    $periodosSubmenu[] = [
+                        'text' => 'Metas e Resultados',
+                        'url'  => route('periodos.comparativo', [
+                            'curso' => $curso->id,
+                            'ano' => $ano,
+                            'periodo' => 1 // necessário para a rota
+                        ])
+                    ];
+
                     $submenu[] = [
                         'text' => $curso->nome,
                         'url'  => '#',
-                        'submenu' => collect(range(1, $curso->periodos))->map(function ($periodo) use ($curso, $ano) {
-                            return [
-                                'text' => "{$periodo}º Período",
-                                'url'  => route('admin.periodos.show', [
-                                    'curso' => $curso->id, // Usa ID em vez de slug
-                                    'ano' => $ano,
-                                    'periodo' => $periodo
-                                ]),
-                            ];
-                        })->toArray(),
+                        'submenu' => $periodosSubmenu
                     ];
                 }
 
@@ -71,4 +84,3 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 }
-

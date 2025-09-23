@@ -26,9 +26,6 @@
                 <div class="form-group">
                     <label for="periodos">Número de Períodos</label>
                     <select class="form-control" id="periodos" name="periodos" required>
-                        <option value="1">1 Período</option>
-                        <option value="2">2 Períodos</option>
-                        <option value="3">3 Períodos</option>
                         <option value="4">4 Períodos</option>
                     </select>
                 </div>

@@ -48,12 +48,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('cursos/{curso}/ano/{ano}/periodo/{periodo}', [PeriodoController::class, 'show'])
         ->name('periodos.show');
-    
+
     Route::post('periodos/processar-planilha', [PlanilhaController::class, 'importar'])
         ->name('periodos.processar-planilha');
-    
+
     Route::post('periodos/salvar-dados', [PeriodoController::class, 'storeData'])
         ->name('periodos.salvar-dados');
 });
+
+// Nova rota para o comparativo
+Route::get('admin/cursos/{curso}/ano/{ano}/periodo/{periodo}/comparativo', [PeriodoController::class, 'comparativo'])
+    ->name('periodos.comparativo');
+
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    Route::post('periodos/salvar-metas', [PeriodoController::class, 'salvarMetas'])
+        ->name('periodos.salvar-metas');
+});
+
 
 require __DIR__.'/auth.php';
