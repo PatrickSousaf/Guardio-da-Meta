@@ -88,7 +88,7 @@
 
         <!-- Rodapé -->
         <div class="mt-8 text-center text-white/70 text-sm">
-            &copy; {{ date('Y') }} Sistema Escolar — Desenvolvido por Anderson Patrick
+            &copy;{{ date('Y') }} Sistema Guardião da Meta — Desenvolvido por Anderson Patrick
         </div>
 
         <!-- Oferta / Instagram abaixo do rodapé -->

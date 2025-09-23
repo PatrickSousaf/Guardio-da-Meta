@@ -1,136 +1,116 @@
-@extends('adminlte::auth.auth-page', ['authType' => 'register'])
+<x-guest-layout>
+    <div class="mb-4">
+        @auth
+            @if(Auth::user()->role === 'director')
+                <div class="text-center mb-6">
+                    <a href="{{ route('dashboard') }}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-arrow-left mr-1"></i> Ir para o Dashboard
+                    </a>
+                </div>
+            @endif
+        @endauth
+    </div>
 
-@section('adminlte_css')
-    <link rel="stylesheet" href="{{ asset('css/auth-custom.css') }}">
-@stop
+    <div class="mb-4">
+        <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
+            <div class="flex items-center">
+                <i class="fas fa-user-shield mr-2"></i>
+                <div>
+                    <strong class="block">Registro de Novos Usuários</strong>
+                    <small class="text-blue-600">Apenas diretores podem registrar novos usuários</small>
+                </div>
+            </div>
+        </div>
+    </div>
 
-@php
-    $loginUrl = View::getSection('login_url') ?? config('adminlte.login_url', 'login');
-    $registerUrl = View::getSection('register_url') ?? config('adminlte.register_url', 'register');
-
-    if (config('adminlte.use_route_url', false)) {
-        $loginUrl = $loginUrl ? route($loginUrl) : '';
-        $registerUrl = $registerUrl ? route($registerUrl) : '';
-    } else {
-        $loginUrl = $loginUrl ? url($loginUrl) : '';
-        $registerUrl = $registerUrl ? url($registerUrl) : '';
-    }
-@endphp
-
-@section('auth_header', __('adminlte::adminlte.register_message'))
-
-@section('auth_body')
-    <form action="{{ $registerUrl }}" method="post">
+    @if(!session('invite_validated'))
+    <!-- Formulário de Validação do Código -->
+    <form method="POST" action="{{ route('validate.invite') }}">
         @csrf
 
-        {{-- Name field --}}
-        <div class="input-group mb-3">
-            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                value="{{ old('name') }}" placeholder="{{ __('adminlte::adminlte.full_name') }}" autofocus>
-
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-user {{ config('adminlte.classes_auth_icon', '') }}"></span>
-                </div>
-            </div>
-
-            @error('name')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
+        <div class="mb-4">
+            <x-input-label for="invite_code" :value="__('Código de Convite')" />
+            <x-text-input id="invite_code" class="block mt-1 w-full" type="text" name="invite_code" required autofocus />
+            <x-input-error :messages="$errors->get('invite_code')" class="mt-2" />
+            <p class="text-xs text-gray-500 mt-1">Insira o código de convite fornecido</p>
         </div>
 
-        {{-- Email field --}}
-        <div class="input-group mb-3">
-            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                value="{{ old('email') }}" placeholder="{{ __('adminlte::adminlte.email') }}">
-
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-envelope {{ config('adminlte.classes_auth_icon', '') }}"></span>
-                </div>
-            </div>
-
-            @error('email')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
+        <div class="flex items-center justify-end mt-4">
+            <x-primary-button class="w-full justify-center">
+                <i class="fas fa-check mr-2"></i> {{ __('Validar Código') }}
+            </x-primary-button>
         </div>
-
-        {{-- Role select --}}
-        <div class="input-group mb-3">
-            <select name="role" class="form-control @error('role') is-invalid @enderror" required>
-                <option value="" disabled selected>Selecione sua função</option>
-                <option value="director" {{ old('role') == 'director' ? 'selected' : '' }}>Diretor</option>
-                <option value="management" {{ old('role') == 'management' ? 'selected' : '' }}>Gestão</option>
-                <option value="teacher" {{ old('role') == 'teacher' ? 'selected' : '' }}>Professor</option>
-            </select>
-
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-user-tag"></span>
-                </div>
-            </div>
-
-            @error('role')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
-        </div>
-
-
-        {{-- Password field --}}
-        <div class="input-group mb-3">
-            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
-                placeholder="{{ __('adminlte::adminlte.password') }}">
-
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-lock {{ config('adminlte.classes_auth_icon', '') }}"></span>
-                </div>
-            </div>
-
-            @error('password')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
-        </div>
-
-        {{-- Confirm password field --}}
-        <div class="input-group mb-3">
-            <input type="password" name="password_confirmation"
-                class="form-control @error('password_confirmation') is-invalid @enderror"
-                placeholder="{{ __('adminlte::adminlte.retype_password') }}">
-
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-lock {{ config('adminlte.classes_auth_icon', '') }}"></span>
-                </div>
-            </div>
-
-            @error('password_confirmation')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
-        </div>
-
-        {{-- Register button --}}
-        <button type="submit" class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}">
-            <span class="fas fa-user-plus"></span>
-            {{ __('adminlte::adminlte.register') }}
-        </button>
     </form>
-@stop
 
-@section('auth_footer')
-    <p class="my-0">
-        <a href="{{ $loginUrl }}">
-            {{ __('adminlte::adminlte.i_already_have_a_membership') }}
-        </a>
-    </p>
-@stop
+    @else
+    <!-- Formulário de Registro -->
+    <form method="POST" action="{{ route('register.store') }}">
+        @csrf
+
+        <input type="hidden" name="invite_code" value="{{ session('invite_code') }}">
+
+        <!-- Name -->
+        <div class="mb-4">
+            <x-input-label for="name" :value="__('Nome Completo')" />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
+            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        </div>
+
+        <!-- Email Address -->
+        <div class="mb-4">
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+        <!-- Role (definida pelo código) -->
+        <div class="mb-4">
+            <x-input-label for="role" :value="__('Função')" />
+            <div class="bg-gray-100 p-3 rounded border border-gray-300">
+                <div class="flex items-center justify-between">
+                    <strong class="text-gray-700">{{ ucfirst(session('allowed_role')) }}</strong>
+                    <i class="fas fa-user-tag text-gray-500"></i>
+                </div>
+                <input type="hidden" name="role" value="{{ session('allowed_role') }}">
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Função definida pelo código de convite</p>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-4">
+            <x-input-label for="password" :value="__('Senha')" />
+            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required />
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-4">
+            <x-input-label for="password_confirmation" :value="__('Confirmar Senha')" />
+            <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required />
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <div class="flex items-center justify-between mt-6">
+            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('dashboard') }}">
+                {{ __('Cancelar') }}
+            </a>
+
+            <x-primary-button>
+                <i class="fas fa-user-plus mr-2"></i> {{ __('Registrar Usuário') }}
+            </x-primary-button>
+        </div>
+    </form>
+    @endif
+
+    <!-- Link para login se não estiver autenticado -->
+    @guest
+    <div class="mt-4 text-center">
+        <p class="text-sm text-gray-600">
+            Já tem uma conta?
+            <a href="{{ route('login') }}" class="underline text-gray-900 hover:text-gray-500">
+                {{ __('Fazer login') }}
+            </a>
+        </p>
+    </div>
+    @endguest
+</x-guest-layout>
