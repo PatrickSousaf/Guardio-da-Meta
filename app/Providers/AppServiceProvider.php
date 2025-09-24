@@ -20,12 +20,6 @@ class AppServiceProvider extends ServiceProvider
 
             $event->menu->add(['header' => 'Turmas da Escola']);
 
-            $event->menu->add([
-                'text' => 'Gerenciamento dos Anos',
-                'url'  => route('admin.cursos.index'),
-                'icon' => 'fas fa-fw fa-cog',
-            ]);
-
             $anos = Curso::all()->groupBy('ano')->sortKeys();
 
             foreach ($anos as $ano => $cursos) {
@@ -36,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
                     $periodosSubmenu = collect(range(1, $curso->periodos))->map(function ($periodo) use ($curso, $ano) {
                         return [
                             'text' => "{$periodo}º Período",
+                            'icon' => 'fas fa-check',
                             'url'  => route('admin.periodos.show', [
                                 'curso' => $curso->id,
                                 'ano' => $ano,
@@ -47,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
                     // Adiciona o menu Comparativo
                     $periodosSubmenu[] = [
                         'text' => 'Metas e Resultados',
+                        'icon' => 'fas fa-poll-h',
                         'url'  => route('periodos.comparativo', [
                             'curso' => $curso->id,
                             'ano' => $ano,
@@ -57,30 +53,35 @@ class AppServiceProvider extends ServiceProvider
                     $submenu[] = [
                         'text' => $curso->nome,
                         'url'  => '#',
-                        'submenu' => $periodosSubmenu
+                        'submenu' => $periodosSubmenu,
+                        'icon' => 'fas fa-bookmark',
                     ];
+
                 }
 
                 $event->menu->add([
                     'text'    => "{$ano}º Anos",
-                    'icon'    => 'fas fa-fw fa-share',
+                    'icon'    => 'fas fa-graduation-cap',
                     'submenu' => $submenu,
                 ]);
             }
 
-            $event->menu->add(['header' => 'Configurações da Conta']);
+
+            $event->menu->add(['header' => 'Configurações']);
+
+            $event->menu->add([
+                'text' => 'Gerenciamento dos Anos',
+                'url'  => route('admin.cursos.index'),
+                'icon' => 'fas fa-fw fa-cog',
+            ]);
+
 
             $event->menu->add([
                 'text' => 'Perfil',
                 'url'  => route('profile.edit'),
                 'icon' => 'fas fa-fw fa-user',
             ]);
-
-            $event->menu->add([
-                'text' => 'Alterar Senha',
-                'url'  => route('profile.edit'),
-                'icon' => 'fas fa-fw fa-lock',
-            ]);
+            
         });
     }
 }
