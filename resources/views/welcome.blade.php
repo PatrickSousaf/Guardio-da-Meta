@@ -64,13 +64,6 @@
                                 class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-md transform hover:scale-105 transition duration-300">
                                 Login
                             </a>
-
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}"
-                                    class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-md transform hover:scale-105 transition duration-300">
-                                    Registra-se
-                                </a>
-                            @endif
                         @endauth
                     @endif
                 </div>

@@ -3,6 +3,23 @@
 @section('title', 'Comparativo Meta vs Resultado - ' . $curso->nome)
 
 @section('content')
+@php
+    // Função para determinar a cor baseada na comparação (FORA DO LOOP)
+    function getColorClass($valorResultado, $valorMeta, $isInverse = false) {
+        if ($valorResultado === null || $valorMeta === null) {
+            return 'bg-secondary text-white'; // Sem dados
+        }
+
+        if ($isInverse) {
+            // Para infrequência (menor é melhor)
+            return $valorResultado <= $valorMeta ? 'bg-success text-white' : 'bg-warning text-dark';
+        } else {
+            // Para outros valores (maior é melhor)
+            return $valorResultado >= $valorMeta ? 'bg-success text-white' : 'bg-warning text-dark';
+        }
+    }
+@endphp
+
 <div class="card shadow-sm">
     <div class="card-header bg-primary text-white">
         <h3 class="card-title text-center w-100">Métrica das metas e resultados gerais: {{ $curso->nome }} </h3>
@@ -98,47 +115,59 @@
                     </tr>
                     <tr class="{{ $i == $periodoNumero ? 'table-active' : '' }}">
                         <td class="bg-info text-white font-weight-bold">Resultado</td>
-                        <td class="bg-resultado {{ $resultado ? 'text-white' : 'bg-secondary text-white' }}"
-                            style="{{ $resultado ? 'background-color: #28a745 !important;' : '' }}">
+
+                        {{-- Alunos --}}
+                        <td class="{{ getColorClass($resultado->total_alunos ?? null, $meta->alunos ?? null) }}">
                             {{ $resultado->total_alunos ?? 'N/D' }}
                         </td>
-                        <td class="bg-resultado {{ $resultado ? 'text-white' : 'bg-secondary text-white' }}"
-                            style="{{ $resultado ? 'background-color: #28a745 !important;' : '' }}">
+
+                        {{-- Média Geral --}}
+                        <td class="{{ getColorClass($resultado->media_geral ?? null, $meta->media_geral ?? null) }}">
                             {{ $resultado ? number_format($resultado->media_geral, 2) : 'N/D' }}
                         </td>
-                        <td class="bg-resultado {{ $resultado ? 'text-white' : 'bg-secondary text-white' }}"
-                            style="{{ $resultado ? 'background-color: #28a745 !important;' : '' }}">
+
+                        {{-- Infrequência (inverso: menor é melhor) --}}
+                        <td class="{{ getColorClass($resultado->infrequencia ?? null, $meta->infrequencia ?? null, true) }}">
                             {{ $resultado ? number_format($resultado->infrequencia, 2) : 'N/D' }}
                         </td>
-                        <td class="bg-resultado {{ $resultado ? 'text-white' : 'bg-secondary text-white' }}"
-                            style="{{ $resultado ? 'background-color: #28a745 !important;' : '' }}">
+
+                        {{-- Frequência --}}
+                        <td class="{{ getColorClass($resultado->frequencia ?? null, $meta->frequencia ?? null) }}">
                             {{ $resultado ? number_format($resultado->frequencia, 2) : 'N/D' }}
                         </td>
-                        <td class="bg-resultado {{ $resultado ? 'text-white' : 'bg-secondary text-white' }}"
-                            style="{{ $resultado ? 'background-color: #28a745 !important;' : '' }}">
+
+                        {{-- Aprovação LP --}}
+                        <td class="{{ getColorClass($resultado->acima_media_pt ?? null, $meta->aprovacao_lp ?? null) }}">
                             {{ $resultado->acima_media_pt ?? 'N/D' }}
                         </td>
-                        <td class="bg-resultado {{ $resultado ? 'text-white' : 'bg-secondary text-white' }}"
-                            style="{{ $resultado ? 'background-color: #28a745 !important;' : '' }}">
+
+                        {{-- % PT --}}
+                        <td class="{{ getColorClass($resultado->percentual_pt ?? null, $meta->percentual_pt ?? null) }}">
                             {{ $resultado ? number_format($resultado->percentual_pt, 2) : 'N/D' }}
                         </td>
-                        <td class="bg-resultado {{ $resultado ? 'text-white' : 'bg-secondary text-white' }}"
-                            style="{{ $resultado ? 'background-color: #28a745 !important;' : '' }}">
+
+                        {{-- Aprovação MT --}}
+                        <td class="{{ getColorClass($resultado->acima_media_mat ?? null, $meta->aprovacao_mt ?? null) }}">
                             {{ $resultado->acima_media_mat ?? 'N/D' }}
                         </td>
-                        <td class="bg-resultado {{ $resultado ? 'text-white' : 'bg-secondary text-white' }}"
-                            style="{{ $resultado ? 'background-color: #28a745 !important;' : '' }}">
+
+                        {{-- % MAT --}}
+                        <td class="{{ getColorClass($resultado->percentual_mat ?? null, $meta->percentual_mat ?? null) }}">
                             {{ $resultado ? number_format($resultado->percentual_mat, 2) : 'N/D' }}
                         </td>
-                        <td class="bg-resultado {{ $resultado ? 'text-white' : 'bg-secondary text-white' }}"
-                            style="{{ $resultado ? 'background-color: #28a745 !important;' : '' }}">
+
+                        {{-- Aprovação Geral --}}
+                        <td class="{{ getColorClass($resultado->acima_media_geral ?? null, $meta->aprovacao_geral ?? null) }}">
                             {{ $resultado->acima_media_geral ?? 'N/D' }}
                         </td>
-                        <td class="bg-resultado {{ $resultado ? 'text-white' : 'bg-secondary text-white' }}"
-                            style="{{ $resultado ? 'background-color: #28a745 !important;' : '' }}">
+
+                        {{-- % Geral --}}
+                        <td class="{{ getColorClass($resultado->percentual_aprovacao_geral ?? null, $meta->percentual_geral ?? null) }}">
                             {{ $resultado ? number_format($resultado->percentual_aprovacao_geral, 2) : 'N/D' }}
                         </td>
-                        <td class="bg-ide-final {{ $resultado ? 'bg-warning text-white' : 'bg-secondary text-white' }}">
+
+                        {{-- IDE-SALA --}}
+                        <td class="{{ getColorClass($resultado->media_total ?? null, $meta->ide_sala ?? null) }}">
                             {{ $resultado ? number_format($resultado->media_total, 2) : 'N/D' }}
                         </td>
                     </tr>
@@ -151,6 +180,31 @@
                 <button onclick="saveMetaData()" class="btn btn-success"><i class="fas fa-save"></i> Salvar Metas</button>
             </div>
             <br>
+        </div>
+    </div>
+</div>
+
+{{-- Legenda --}}
+<div class="card mt-3">
+    <div class="card-header bg-light">
+        <h5 class="card-title mb-0">Legenda das Cores</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <span class="badge bg-success p-2 mr-2">Verde</span>
+                <span>Resultado atingiu ou superou a meta</span>
+            </div>
+            <div class="col-md-6">
+                <span class="badge bg-warning p-2 mr-2">Amarelo</span>
+                <span>Resultado abaixo da meta</span>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <span class="badge bg-secondary p-2 mr-2">Cinza</span>
+                <span>Dados não disponíveis</span>
+            </div>
         </div>
     </div>
 </div>
@@ -185,12 +239,12 @@
         --bg-primary: #007bff;       /* Azul médio */
         --bg-success: #28a745;       /* Verde */
         --bg-warning: #ffc107;       /* Amarelo */
-        --bg-resultado: #28a745;     /* Roxo para resultados */
+        --bg-secondary: #6c757d;     /* Cinza */
 
         --bg-default: #d1ecf1;       /* Cor padrão para campos de valor */
-        --bg-ide-final: #28a745;     /* Verde para IDE-SALA final */
 
         --text-white: white;
+        --text-dark: #212529;
         --table-active: #189a36;
     }
 
@@ -198,17 +252,16 @@
     .bg-info { background-color: var(--bg-info) !important; color: var(--text-white); }
     .bg-primary { background-color: var(--bg-primary) !important; color: var(--text-white); }
     .bg-success { background-color: var(--bg-success) !important; color: var(--text-white); }
-    .bg-warning { background-color: var(--bg-warning) !important; color: #3979b1; }
+    .bg-warning { background-color: var(--bg-warning) !important; color: var(--text-dark); }
+    .bg-secondary { background-color: var(--bg-secondary) !important; color: var(--text-white); }
 
     /* Cores para as células de dados */
     .bg-default { background-color: var(--bg-default) !important; }
-    .bg-resultado { background-color: var(--bg-resultado) !important; color: var(--text-white) !important; }
-    .bg-ide-final { background-color: var(--bg-ide-final) !important; color: var(--text-white) !important; }
 
-    .bg-secondary {
-        background-color: #3979b1 !important;
-        color: var(--text-white);
-    }
+    /* Cores para resultados */
+    .bg-success { background-color: var(--bg-success) !important; color: var(--text-white) !important; }
+    .bg-warning { background-color: var(--bg-warning) !important; color: var(--text-dark) !important; }
+    .bg-secondary { background-color: var(--bg-secondary) !important; color: var(--text-white) !important; }
 
     .table-active {
         background-color: var(--table-active) !important;
@@ -230,21 +283,14 @@
         text-align: center;
     }
 
-    /* Garantir que as cores se sobreponham */
-    .bg-default.bg-success,
-    .bg-default.bg-secondary,
-    .bg-resultado.bg-success,
-    .bg-resultado.bg-secondary,
-    .bg-ide-final.bg-success,
-    .bg-ide-final.bg-secondary {
-        background-color: inherit !important;
+    /* Melhorar visualização das cores */
+    .bg-success, .bg-warning, .bg-secondary {
+        font-weight: bold;
     }
 
-    /* Forçar cor do texto */
-    .bg-resultado,
-    .bg-ide-final {
-        color: white !important;
-        font-weight: bold;
+    .badge {
+        min-width: 60px;
+        text-align: center;
     }
 </style>
 @stop
@@ -353,7 +399,6 @@ async function saveMetaData() {
         alert('Erro: ' + error.message);
     }
 }
-
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {

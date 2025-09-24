@@ -1,0 +1,108 @@
+  input[readonly] {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+    }
+
+    .table th {
+        font-weight: 600;
+        vertical-align: middle;
+        border: 1px solid #dee2e6;
+    }
+
+    .table td {
+        vertical-align: middle;
+        border: 1px solid #dee2e6;
+        padding: 8px;
+    }
+
+    .form-control {
+        border: 1px solid #dee2e6;
+        margin: 0;
+        height: 38px;
+    }
+
+    .bg-lightblue {
+        background-color: #e3f2fd;
+    }
+
+    .table-responsive {
+        border-radius: 0.25rem;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .metric-input {
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .metric-input:focus {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .metric-display {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: bold;
+    }
+
+    .table thead th {
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody td {
+        min-height: 60px;
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .input-group-append .input-group-text {
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+    }
+
+    .bg-primary { background-color: #007bff !important; }
+    .bg-info { background-color: #17a2b8 !important; }
+    .bg-success { background-color: #28a745 !important; }
+    .bg-warning { background-color: #ffc107 !important; color: #212529 !important; }
+
+    .bg-custom {
+        background-color: #189b4f !important;
+        color: #ffffff !important;
+    }
+
+    .table {
+        table-layout: auto;
+        width: 100%;
+    }
+
+    .table th, .table td {
+        padding: 10px 8px;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+        font-size: 14px;
+    }
+
+    .table th:nth-child(1),
+    .table th:nth-child(2),
+    .table th:nth-child(3),
+    .table th:nth-child(4),
+    .table th:nth-child(5),
+    .table th:nth-child(6),
+    .table th:nth-child(7),
+    .table th:nth-child(8),
+    .table th:nth-child(9),
+    .table th:nth-child(10),
+    .table th:nth-child(11) {
+        min-width: auto;
+    }
+
+    .table thead tr:first-child th {
+        font-size: 15px;
+        font-weight: 600;
+        padding: 12px 6px;
+    }
