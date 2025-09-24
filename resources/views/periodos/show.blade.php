@@ -424,133 +424,54 @@
     }
 
     // Função para processar o conteúdo do CSV
-    function processarCSV(csvContent) {
-        const linhas = csvContent.split('\n');
-        const cabecalhos = linhas[0].split(';').map(h => h.trim());
+    // Substitua a função processCSV() por esta versão corrigida
+async function processCSV() {
+    const fileInput = document.getElementById('csvFileInput');
+    const file = fileInput.files[0];
 
-        const indicePortugues = cabecalhos.findIndex(h =>
-            h.includes('PORTUGUESA') || h.includes('PORTUGUES') || h.includes('LÕNGUA PORTUGUESA') ||
-            h.includes('LÍNGUA PORTUGUESA') || h.includes('LINGUA PORTUGUESA')
-        );
-
-        const indiceMatematica = cabecalhos.findIndex(h =>
-            h.includes('MATEM') || h.includes('MATEMÁTICA') || h.includes('MATEM¡TICA') ||
-            h.includes('MATEMATICA')
-        );
-
-        if (indicePortugues === -1 || indiceMatematica === -1) {
-            throw new Error('Colunas de Português ou Matemática não encontradas no CSV');
-        }
-
-        let totalAlunos = 0;
-        let somaNotas = 0;
-        let acimaMediaPT = 0;
-        let acimaMediaMat = 0;
-        let acimaMediaGeral = 0;
-
-        for (let i = 1; i < linhas.length; i++) {
-            const linha = linhas[i].trim();
-            if (!linha) continue;
-
-            const valores = linha.split(';').map(v => v.trim());
-            if (!valores[0] || isNaN(valores[0])) continue;
-
-            totalAlunos++;
-
-            let somaNotasAluno = 0;
-            let totalNotasAluno = 0;
-
-            for (let j = 2; j < valores.length; j++) {
-                if (valores[j] && !isNaN(valores[j]) && valores[j] !== '') {
-                    const nota = parseFloat(valores[j].replace(',', '.'));
-                    somaNotasAluno += nota;
-                    totalNotasAluno++;
-                }
-            }
-
-            const mediaAluno = totalNotasAluno > 0 ? somaNotasAluno / totalNotasAluno : 0;
-            somaNotas += mediaAluno;
-
-            if (valores[indicePortugues] && !isNaN(valores[indicePortugues])) {
-                const notaPT = parseFloat(valores[indicePortugues].replace(',', '.'));
-                if (notaPT >= 6.0) {
-                    acimaMediaPT++;
-                }
-            }
-
-            if (valores[indiceMatematica] && !isNaN(valores[indiceMatematica])) {
-                const notaMat = parseFloat(valores[indiceMatematica].replace(',', '.'));
-                if (notaMat >= 6.0) {
-                    acimaMediaMat++;
-                }
-            }
-
-            if (mediaAluno >= 6.0) {
-                acimaMediaGeral++;
-            }
-        }
-
-        const mediaGeral = totalAlunos > 0 ? somaNotas / totalAlunos : 0;
-
-        return {
-            TotalAlunos: totalAlunos,
-            mediaGeral: mediaGeral.toFixed(2),
-            acimaMediaPT: acimaMediaPT,
-            acimaMediaMat: acimaMediaMat,
-            acimaMediaGeral: acimaMediaGeral
-        };
+    if (!file) {
+        Swal.fire('Atenção', 'Por favor, selecione um arquivo CSV primeiro.', 'warning');
+        return;
     }
 
-    function processCSV() {
-        const fileInput = document.getElementById('csvFileInput');
-        const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('curso_id', cursoId);
+    formData.append('periodo', periodo);
 
-        if (!file) {
-            Swal.fire('Atenção', 'Por favor, selecione um arquivo CSV primeiro.', 'warning');
-            return;
-        }
-
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            try {
-                const csvContent = e.target.result;
-                const dadosProcessados = processarCSV(csvContent);
-
-                document.getElementById('TotalAlunos').value = dadosProcessados.TotalAlunos;
-                document.getElementById('mediaGeral').value = dadosProcessados.mediaGeral;
-                document.getElementById('acimaMediaPT').value = dadosProcessados.acimaMediaPT;
-                document.getElementById('acimaMediaMat').value = dadosProcessados.acimaMediaMat;
-                document.getElementById('acimaMediaGeral').value = dadosProcessados.acimaMediaGeral;
-
-                calcularTudo();
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'CSV processado com sucesso!',
-                    text: `Foram importados dados de ${dadosProcessados.TotalAlunos} alunos.`,
-                    confirmButtonText: 'OK'
-                });
-            } catch (error) {
-                Swal.fire('Erro', 'Erro ao processar CSV: ' + error.message, 'error');
-            }
-        };
-
-        reader.onerror = function() {
-            Swal.fire('Erro', 'Erro ao ler o arquivo', 'error');
-        };
-
-        reader.readAsText(file);
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Página carregada, calculando valores iniciais...');
-        calcularTudo();
-
-        const camposEditaveis = ['TotalAlunos', 'infrequencia', 'acimaMediaPT', 'acimaMediaMat', 'acimaMediaGeral', 'mediaGeral'];
-        camposEditaveis.forEach(id => {
-            document.getElementById(id).addEventListener('input', calcularTudo);
+    try {
+        const response = await fetch('{{ route("admin.periodos.importar-csv") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: formData
         });
-    });
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Preencher os campos com os dados processados
+            document.getElementById('TotalAlunos').value = result.data.TotalAlunos;
+            document.getElementById('mediaGeral').value = result.data.mediaGeral;
+            document.getElementById('acimaMediaPT').value = result.data.acimaMediaPT;
+            document.getElementById('acimaMediaMat').value = result.data.acimaMediaMat;
+            document.getElementById('acimaMediaGeral').value = result.data.acimaMediaGeral;
+
+            calcularTudo();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'CSV processado com sucesso!',
+                text: result.message,
+                confirmButtonText: 'OK'
+            });
+        } else {
+            Swal.fire('Erro', result.message, 'error');
+        }
+    } catch (error) {
+        Swal.fire('Erro', 'Erro ao processar CSV: ' + error.message, 'error');
+    }
+}
 </script>
 @stop

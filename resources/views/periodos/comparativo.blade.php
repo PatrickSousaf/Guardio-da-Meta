@@ -277,20 +277,22 @@ function calcularMeta() {
     const geral = parseFloat(document.querySelector(`.meta-geral[data-periodo="${periodo}"]`).value) || 0;
     const media = parseFloat(document.querySelector(`.meta-media[data-periodo="${periodo}"]`).value) || 0;
 
-    // Cálculos automáticos - Frequência agora é de 0 a 1
-    const freq = (100 - inf) / 100; // Já está entre 0 e 1
-    const percLP = alunos > 0 ? (lp / alunos) * 100 : 0;
-    const percMT = alunos > 0 ? (mt / alunos) * 100 : 0;
-    const percGeral = alunos > 0 ? (geral / alunos) * 100 : 0;
+    // Cálculos automáticos
+    const freq = (100 - inf) / 100; // 0 a 1
 
-    // IDE-SALA simplificado (ajuste conforme sua fórmula específica)
-    const ide = media * freq * (percLP / 100) * (percMT / 100) * (percGeral / 100) * 10;
+    // PERCENTUAIS DEVEM SER 0-1, NÃO 0-100
+    const percLP = alunos > 0 ? (lp / alunos) : 0; // Já entre 0-1
+    const percMT = alunos > 0 ? (mt / alunos) : 0; // Já entre 0-1
+    const percGeral = alunos > 0 ? (geral / alunos) : 0; // Já entre 0-1
 
-    // Atualizar campos calculados - Frequência agora mostra valor entre 0 e 1
+    // IDE-SALA - Todos os valores entre 0-1
+    const ide = (media * freq * percLP * percMT * percGeral * 10) / 10 ;
+
+    // Atualizar campos calculados - AGORA EXIBINDO COMO 0-1
     document.querySelector(`.meta-frequencia[data-periodo="${periodo}"]`).value = freq.toFixed(2);
-    document.querySelector(`.meta-percentual-pt[data-periodo="${periodo}"]`).value = percLP.toFixed(2);
-    document.querySelector(`.meta-percentual-mat[data-periodo="${periodo}"]`).value = percMT.toFixed(2);
-    document.querySelector(`.meta-percentual-geral[data-periodo="${periodo}"]`).value = percGeral.toFixed(2);
+    document.querySelector(`.meta-percentual-pt[data-periodo="${periodo}"]`).value = percLP.toFixed(2); // 0-1
+    document.querySelector(`.meta-percentual-mat[data-periodo="${periodo}"]`).value = percMT.toFixed(2); // 0-1
+    document.querySelector(`.meta-percentual-geral[data-periodo="${periodo}"]`).value = percGeral.toFixed(2); // 0-1
     document.querySelector(`.meta-ide[data-periodo="${periodo}"]`).value = ide.toFixed(2);
 }
 
@@ -300,9 +302,14 @@ async function saveMetaData() {
         return;
     }
 
-    const metas = {};
+    const now = new Date();
+    const ano = now.getFullYear();
+    const semestre = now.getMonth() < 6 ? 1 : 2;
+
+    // Converter objeto para ARRAY - isso resolve 90% dos casos
+    const metasArray = [];
     for (let i = 1; i <= 4; i++) {
-        metas[i] = {
+        metasArray.push({
             periodo: i,
             alunos: parseInt(document.querySelector(`.meta-alunos[data-periodo="${i}"]`).value) || 0,
             media_geral: parseFloat(document.querySelector(`.meta-media[data-periodo="${i}"]`).value) || 0,
@@ -315,7 +322,7 @@ async function saveMetaData() {
             percentual_mat: parseFloat(document.querySelector(`.meta-percentual-mat[data-periodo="${i}"]`).value) || 0,
             percentual_geral: parseFloat(document.querySelector(`.meta-percentual-geral[data-periodo="${i}"]`).value) || 0,
             ide_sala: parseFloat(document.querySelector(`.meta-ide[data-periodo="${i}"]`).value) || 0
-        };
+        });
     }
 
     try {
@@ -323,12 +330,13 @@ async function saveMetaData() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             body: JSON.stringify({
                 curso_id: cursoId,
-                metas: metas
+                ano: ano,
+                semestre: semestre,
+                metas: metasArray // Agora é array, não objeto
             })
         });
 
@@ -336,15 +344,16 @@ async function saveMetaData() {
 
         if (result.success) {
             alert('Metas salvas com sucesso!');
-            toggleEditMode(); // Desativa o modo de edição
-            location.reload(); // Recarrega a página para atualizar os dados
+            toggleEditMode();
+            location.reload();
         } else {
-            alert('Erro ao salvar metas: ' + result.message);
+            alert(result.message || 'Erro ao salvar');
         }
     } catch (error) {
-        alert('Erro ao salvar metas: ' + error.message);
+        alert('Erro: ' + error.message);
     }
 }
+
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {

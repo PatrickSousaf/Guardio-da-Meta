@@ -17,6 +17,5 @@ class DatabaseSeeder extends Seeder
         $this->call(CursosTableSeeder::class);
         $this->call(DirectorUserSeeder::class);
         $this->call(InviteCodesSeeder::class);
-
     }
 }

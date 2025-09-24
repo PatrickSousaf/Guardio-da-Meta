@@ -7,6 +7,7 @@ use App\Models\PeriodoDado;
 use App\Models\MetaPeriodo;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class PeriodoController extends Controller
 {
@@ -107,70 +108,53 @@ class PeriodoController extends Controller
         ));
     }
 
-    /**
-     * Salvar metas dos períodos
-     */
-    public function salvarMetas(Request $request): JsonResponse
-    {
-        try {
-            $request->validate([
-                'curso_id' => 'required|exists:cursos,id',
-                'metas' => 'required|array',
-                'metas.*.periodo' => 'required|integer|between:1,4',
-                'metas.*.turma' => 'required|string|max:255',
-                'metas.*.alunos' => 'required|integer|min:0',
-                'metas.*.media_geral' => 'required|numeric|min:0|max:10',
-                'metas.*.infrequencia' => 'required|numeric|min:0|max:100',
-                'metas.*.frequencia' => 'nullable|numeric|min:0|max:100',
-                'metas.*.aprovacao_lp' => 'nullable|integer|min:0',
-                'metas.*.aprovacao_mt' => 'nullable|integer|min:0',
-                'metas.*.aprovacao_geral' => 'nullable|integer|min:0',
-                'metas.*.total_aprovados' => 'nullable|integer|min:0',
-                'metas.*.percentual_pt' => 'nullable|numeric|min:0|max:100',
-                'metas.*.percentual_mat' => 'nullable|numeric|min:0|max:100',
-                'metas.*.percentual_geral' => 'nullable|numeric|min:0|max:100',
-                'metas.*.ide_sala' => 'nullable|numeric|min:0|max:10'
-            ]);
+public function salvarMetas(Request $request): JsonResponse
+{
+    try {
+        // Loga todo o request
 
-            $cursoId = $request->curso_id;
-            $metasData = $request->metas;
+        $cursoId = $request->curso_id ?? 0;
+        $metasData = $request->metas ?? [];
 
-            foreach ($metasData as $metaData) {
-                MetaPeriodo::updateOrCreate(
-                    [
-                        'curso_id' => $cursoId,
-                        'periodo' => $metaData['periodo']
-                    ],
-                    [
-                        'turma' => $metaData['turma'],
-                        'alunos' => $metaData['alunos'],
-                        'media_geral' => $metaData['media_geral'],
-                        'infrequencia' => $metaData['infrequencia'],
-                        'frequencia' => $metaData['frequencia'] ?? 0,
-                        'aprovacao_lp' => $metaData['aprovacao_lp'] ?? 0,
-                        'aprovacao_mt' => $metaData['aprovacao_mt'] ?? 0,
-                        'aprovacao_geral' => $metaData['aprovacao_geral'] ?? 0,
-                        'total_aprovados' => $metaData['total_aprovados'] ?? 0,
-                        'percentual_pt' => $metaData['percentual_pt'] ?? 0,
-                        'percentual_mat' => $metaData['percentual_mat'] ?? 0,
-                        'percentual_geral' => $metaData['percentual_geral'] ?? 0,
-                        'ide_sala' => $metaData['ide_sala'] ?? 0
-                    ]
-                );
-            }
+        foreach ($metasData as $index => $metaData) {
+            \Log::info("Meta #{$index} recebida:", $metaData);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Metas salvas com sucesso!'
-            ]);
-
-        } catch (\Exception $e) {
-            \Log::error('Erro ao salvar metas: ' . $e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Erro ao salvar metas: ' . $e->getMessage()
-            ], 500);
+            MetaPeriodo::updateOrCreate(
+                [
+                    'curso_id' => $cursoId,
+                    'periodo' => $metaData['periodo'] ?? 1
+                ],
+                [
+                    'turma' => $metaData['turma'] ?? 'N/D',
+                    'alunos' => $metaData['alunos'] ?? 0,
+                    'media_geral' => $metaData['media_geral'] ?? 0,
+                    'infrequencia' => $metaData['infrequencia'] ?? 0,
+                    'frequencia' => $metaData['frequencia'] ?? 0,
+                    'aprovacao_lp' => $metaData['aprovacao_lp'] ?? 0,
+                    'aprovacao_mt' => $metaData['aprovacao_mt'] ?? 0,
+                    'aprovacao_geral' => $metaData['aprovacao_geral'] ?? 0,
+                    'total_aprovados' => $metaData['total_aprovados'] ?? 0,
+                    'percentual_pt' => $metaData['percentual_pt'] ?? 0,
+                    'percentual_mat' => $metaData['percentual_mat'] ?? 0,
+                    'percentual_geral' => $metaData['percentual_geral'] ?? 0,
+                    'ide_sala' => $metaData['ide_sala'] ?? 0
+                ]
+            );
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Metas salvas com sucesso! (debug)'
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Erro ao salvar metas: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro interno: ' . $e->getMessage()
+        ], 500);
     }
 }
+
+}
+

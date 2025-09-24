@@ -42,9 +42,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('cursos/avancar-ano', [\App\Http\Controllers\CursoController::class, 'avancarAno'])
         ->name('cursos.avancar-ano');
     Route::post('cursos/voltar-ano', [\App\Http\Controllers\CursoController::class, 'voltarAno'])
-        ->name('cursos.voltar-ano'); // ← NOVA ROTA
+        ->name('cursos.voltar-ano');
 });
 
+// JUNTE TODAS AS ROTAS DO PERIODOCONTROLLER EM UM ÚNICO GRUPO
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('cursos/{curso}/ano/{ano}/periodo/{periodo}', [PeriodoController::class, 'show'])
         ->name('periodos.show');
@@ -54,19 +55,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::post('periodos/salvar-dados', [PeriodoController::class, 'storeData'])
         ->name('periodos.salvar-dados');
-});
 
-// Nova rota para o comparativo
-Route::get('admin/cursos/{curso}/ano/{ano}/periodo/{periodo}/comparativo', [PeriodoController::class, 'comparativo'])
-    ->name('periodos.comparativo');
+    // Rota para o comparativo
+    Route::get('cursos/{curso}/ano/{ano}/periodo/{periodo}/comparativo', [PeriodoController::class, 'comparativo'])
+        ->name('periodos.comparativo');
 
-
-
-Route::prefix('admin')->name('admin.')->group(function () {
-
+    // Rota para salvar metas - CORRIGIDA
     Route::post('periodos/salvar-metas', [PeriodoController::class, 'salvarMetas'])
         ->name('periodos.salvar-metas');
 });
 
+Route::post('/periodos/importar-csv', [PlanilhaController::class, 'importar'])
+    ->name('admin.periodos.importar-csv');
 
 require __DIR__.'/auth.php';

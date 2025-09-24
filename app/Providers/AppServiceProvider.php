@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
                     $periodosSubmenu[] = [
                         'text' => 'Metas e Resultados',
                         'icon' => 'fas fa-poll-h',
-                        'url'  => route('periodos.comparativo', [
+                        'url'  => route('admin.periodos.comparativo', [
                             'curso' => $curso->id,
                             'ano' => $ano,
                             'periodo' => 1 // necessário para a rota
@@ -81,7 +81,7 @@ class AppServiceProvider extends ServiceProvider
                 'url'  => route('profile.edit'),
                 'icon' => 'fas fa-fw fa-user',
             ]);
-            
+
         });
     }
 }
