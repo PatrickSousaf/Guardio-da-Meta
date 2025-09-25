@@ -13,6 +13,22 @@
 @stop
 
 @section('content')
+    <!-- Notificação de Sucesso (inicialmente escondida) -->
+    <div id="successNotification" class="notification-success">
+        <div class="notification-content">
+            <div class="notification-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="notification-text">
+                <h4>✅ Dados Salvos com Sucesso!</h4>
+                <p>As informações foram atualizadas no sistema.</p>
+            </div>
+            <button class="notification-close" onclick="hideNotification()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- Seção de Importação CSV -->
     <div class="row mb-4">
         <div class="col-md-12">
@@ -149,6 +165,108 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/periodo.css') }}">
+<style>
+/* Estilos da Notificação */
+.notification-success {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 10000;
+    max-width: 350px;
+    display: none;
+    animation: slideInRight 0.5s ease-out;
+    border-left: 5px solid #fff;
+}
+
+.notification-success.show {
+    display: block;
+    animation: slideInRight 0.5s ease-out;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.notification-icon {
+    font-size: 2rem;
+    animation: bounce 0.6s ease-in-out;
+}
+
+.notification-text h4 {
+    margin: 0 0 5px 0;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.notification-text p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: auto;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+/* Animações */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Efeito de progresso (opcional) */
+.notification-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: rgba(255,255,255,0.5);
+    width: 100%;
+    animation: progress 5s linear;
+}
+
+@keyframes progress {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+</style>
 @stop
 
 @section('js')
@@ -189,14 +307,39 @@
             editBtn.innerHTML = '<i class="fas fa-edit mr-1"></i> Editar';
         }
 
-        Swal.fire({
-            icon: 'info',
-            title: isEditMode ? 'Modo edição ativado' : 'Modo visualização ativado',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 2000
-        });
+        // Notificação simples para modo edição
+        showNotification('Modo ' + (isEditMode ? 'edição' : 'visualização') + ' ativado', 'info');
+    }
+
+    function showNotification(message, type = 'success') {
+        // Para simplificar, vou usar a notificação existente com mensagem customizada
+        const notification = document.getElementById('successNotification');
+        const icon = notification.querySelector('.notification-icon i');
+        const title = notification.querySelector('.notification-text h4');
+        const text = notification.querySelector('.notification-text p');
+
+        if (type === 'info') {
+            notification.style.background = 'linear-gradient(135deg, #17a2b8, #6f42c1)';
+            icon.className = 'fas fa-info-circle';
+            title.innerHTML = 'ℹ️ ' + message;
+            text.innerHTML = 'Altere os valores conforme necessário.';
+        } else {
+            notification.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            icon.className = 'fas fa-check-circle';
+            title.innerHTML = '✅ ' + message;
+            text.innerHTML = 'As informações foram atualizadas no sistema.';
+        }
+
+        notification.classList.add('show');
+
+        // Auto-esconder após 5 segundos
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 5000);
+    }
+
+    function hideNotification() {
+        document.getElementById('successNotification').classList.remove('show');
     }
 
     function calcularTudo() {
@@ -274,95 +417,67 @@
                 console.log('Resultado JSON:', result);
 
                 if (result.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '✅ Dados salvos com sucesso!',
-                        text: 'As informações do período foram atualizadas.',
-                        confirmButtonText: 'OK',
-                        timer: 4000,
-                        timerProgressBar: true,
-                        showConfirmButton: true
-                    });
+                    // MOSTRAR NOTIFICAÇÃO PERSONALIZADA
+                    showNotification('Dados salvos com sucesso!', 'success');
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erro ao salvar',
-                        text: result.message || 'Ocorreu um erro ao salvar os dados.',
-                        confirmButtonText: 'OK'
-                    });
+                    showNotification('Erro ao salvar dados: ' + result.message, 'error');
                 }
             } else {
-                // Se não for JSON, tentar ler como texto
                 const textResult = await response.text();
                 console.log('Resposta como texto:', textResult);
 
-                Swal.fire({
-                    icon: response.ok ? 'success' : 'error',
-                    title: response.ok ? '✅ Dados salvos!' : 'Erro',
-                    text: response.ok ? 'Operação realizada com sucesso.' : 'Resposta inesperada do servidor.',
-                    confirmButtonText: 'OK'
-                });
+                if (response.ok) {
+                    showNotification('Dados salvos com sucesso!', 'success');
+                } else {
+                    showNotification('Erro inesperado ao salvar', 'error');
+                }
             }
         } catch (error) {
             console.error('Erro na requisição:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Erro de conexão',
-                text: 'Erro ao conectar com o servidor: ' + error.message,
-                confirmButtonText: 'OK'
-            });
+            showNotification('Erro de conexão: ' + error.message, 'error');
         }
     }
 
-    // Função para processar o conteúdo do CSV
-    // Substitua a função processCSV() por esta versão corrigida
-async function processCSV() {
-    const fileInput = document.getElementById('csvFileInput');
-    const file = fileInput.files[0];
+    async function processCSV() {
+        const fileInput = document.getElementById('csvFileInput');
+        const file = fileInput.files[0];
 
-    if (!file) {
-        Swal.fire('Atenção', 'Por favor, selecione um arquivo CSV primeiro.', 'warning');
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('curso_id', cursoId);
-    formData.append('periodo', periodo);
-
-    try {
-        const response = await fetch('{{ route("admin.periodos.importar-csv") }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: formData
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            // Preencher os campos com os dados processados
-            document.getElementById('TotalAlunos').value = result.data.TotalAlunos;
-            document.getElementById('mediaGeral').value = result.data.mediaGeral;
-            document.getElementById('acimaMediaPT').value = result.data.acimaMediaPT;
-            document.getElementById('acimaMediaMat').value = result.data.acimaMediaMat;
-            document.getElementById('acimaMediaGeral').value = result.data.acimaMediaGeral;
-
-            calcularTudo();
-
-            Swal.fire({
-                icon: 'success',
-                title: 'CSV processado com sucesso!',
-                text: result.message,
-                confirmButtonText: 'OK'
-            });
-        } else {
-            Swal.fire('Erro', result.message, 'error');
+        if (!file) {
+            showNotification('Por favor, selecione um arquivo CSV primeiro.', 'warning');
+            return;
         }
-    } catch (error) {
-        Swal.fire('Erro', 'Erro ao processar CSV: ' + error.message, 'error');
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('curso_id', cursoId);
+        formData.append('periodo', periodo);
+
+        try {
+            const response = await fetch('{{ route("admin.periodos.importar-csv") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                document.getElementById('TotalAlunos').value = result.data.TotalAlunos;
+                document.getElementById('mediaGeral').value = result.data.mediaGeral;
+                document.getElementById('acimaMediaPT').value = result.data.acimaMediaPT;
+                document.getElementById('acimaMediaMat').value = result.data.acimaMediaMat;
+                document.getElementById('acimaMediaGeral').value = result.data.acimaMediaGeral;
+
+                calcularTudo();
+                showNotification('CSV processado com sucesso!', 'success');
+            } else {
+                showNotification('Erro ao processar CSV: ' + result.message, 'error');
+            }
+        } catch (error) {
+            showNotification('Erro ao processar CSV: ' + error.message, 'error');
+        }
     }
-}
 </script>
 @stop
