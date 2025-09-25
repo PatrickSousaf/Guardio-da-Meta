@@ -3,97 +3,269 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bem-vindo</title>
+    <title>Bem-vindo | Guardião da Meta</title>
 
     <!-- Fonte e Tailwind -->
-    <link href="https://fonts.bunny.net/css?family=poppins:400,600,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=poppins:300,400,500,600,700&display=swap" rel="stylesheet" />
     @vite('resources/css/app.css')
 
     <style>
+        :root {
+            --primary: #10B981;
+            --primary-dark: #059669;
+            --primary-light: #34D399;
+            --secondary: #3B82F6;
+            --accent: #8B5CF6;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+        }
+
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background: url('{{ asset('assets/img/fundo_welcome.jpeg') }}') no-repeat center center fixed;
+            background:
+                linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.9)),
+                url('{{ asset('assets/img/fundo_welcome.jpeg') }}') no-repeat center center fixed;
             background-size: cover;
             position: relative;
-        }
-
-        /* Overlay escuro */
-        body::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: hsla(0, 0%, 0%, 0.7);
-            z-index: 0;
+            min-height: 100vh;
+            color: var(--light);
         }
 
         .content {
             position: relative;
             z-index: 1;
         }
+
+        .main-card {
+            background: linear-gradient(135deg, rgba(25, 30, 35, 0.95) 0%, rgba(35, 40, 45, 0.95) 100%);
+            border-radius: 20px;
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 0 60px rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.4), transparent);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 14px 32px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::after {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .feature-list li {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--primary-light);
+            font-weight: bold;
+            font-size: 1.4em;
+            background: rgba(16, 185, 129, 0.1);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            padding: 20px;
+            background: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+            }
+            70% {
+                box-shadow: 0 0 0 12px rgba(16, 185, 129, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translate(0, 0px); }
+            50% { transform: translate(0, -10px); }
+            100% { transform: translate(0, 0px); }
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, #FFFFFF 0%, #A7F3D0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .highlight {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        .cta-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 16px 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .instagram-link {
+            color: #E5E7EB;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .instagram-link:hover {
+            color: var(--primary-light);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .text-spacing {
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body class="antialiased">
-    <div class="relative min-h-screen flex flex-col items-center justify-center content">
+    <div class="relative min-h-screen flex flex-col items-center justify-center content py-8 px-4">
 
-        <!-- Caixa com texto, botões e logo -->
-        <div class="flex flex-col lg:flex-row items-center justify-between bg-black/60 backdrop-blur-md rounded-2xl shadow-2xl p-12 max-w-6xl w-full gap-10">
+        <!-- Caixa principal com texto, botões e logo -->
+        <div class="main-card flex flex-col lg:flex-row items-center justify-between p-10 lg:p-14 max-w-6xl w-full gap-10 lg:gap-14 mb-8">
 
             <!-- Texto + Botões -->
-            <div class="flex flex-col text-left text-white max-w-xl">
-                <h1 class="text-5xl font-extrabold mb-4 drop-shadow-lg">Bem-vindo ao Guardião da Meta</h1>
-                <h2 class="text-xl font-medium text-white/80 mb-6">A plataforma que conecta gestores, professores e alunos.</h2>
+            <div class="flex flex-col text-left max-w-xl">
+                <h1 class="text-4xl lg:text-5xl font-bold mb-6 title-gradient">
+                    Bem-vindo ao <span class="text-green-400">Guardião da Meta</span>
+                </h1>
+
+                <h2 class="text-lg lg:text-xl font-medium text-gray-200 mb-8 leading-relaxed">
+                    A plataforma que <span class="highlight">conecta gestores, professores e alunos</span> de forma inteligente.
+                </h2>
 
                 <!-- Lista de vantagens -->
-                <ul class="space-y-3 text-lg mb-8">
-                    <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Gestão simples e intuitiva</li>
-                    <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Controle de notas e presença</li>
-                    <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Comunicação direta com alunos</li>
+                <ul class="feature-list text-base lg:text-lg mb-8">
+                    <li><span class="font-semibold">Gestão escolar simplificada</span> e intuitiva</li>
+                    <li><span class="font-semibold">Controle completo</span> de notas e presença</li>
+                    <li><span class="font-semibold">Comunicação direta</span> entre professores e alunos</li>
+                    <li><span class="font-semibold">Relatórios detalhados</span> e personalizados</li>
                 </ul>
 
-                <!-- Botões de autenticação -->
-                <div class="flex flex-wrap gap-4 mb-6">
+                <!-- Botões de autenticação (APENAS O LOGIN CENTRALIZADO) -->
+                <div class="flex justify-center mb-8">
                     @if (Route::has('login'))
                         @auth
-                            <a href="{{ url('/dashboard') }}"
-                                class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-md transform hover:scale-105 transition duration-300">
-                                Dashboard
+                            <a href="{{ url('/dashboard') }}" class="btn-primary pulse">
+                                Acessar Dashboard
                             </a>
                         @else
-                            <a href="{{ route('login') }}"
-                                class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-md transform hover:scale-105 transition duration-300">
-                                Login
+                            <a href="{{ route('login') }}" class="btn-primary">
+                                Fazer Login
                             </a>
                         @endauth
                     @endif
                 </div>
 
                 <!-- Call to action -->
-                <p class="text-sm text-white/70 mb-4">🚀 Entre agora no sistema e simplifique a gestão escolar!</p>
+                <div class="cta-box">
+                    <p class="text-gray-200 flex items-center justify-center text-sm whitespace-nowrap">
+                        <span class="text-lg mr-2">🚀</span>
+                        Entre agora e <span class="font-semibold text-green-300 ml-1">agilize os círculos de conversa da sua escola!</span>
+                    </p>
+                </div>
+
             </div>
 
             <!-- Logo -->
-            <div class="flex flex-col items-center">
-                <img src="{{ asset('assets/img/logo_eep.png') }}" alt="Logo EEEP" class="w-64 h-auto drop-shadow-2xl transform hover:scale-105 transition duration-300 mb-4">
-                <span class="text-white/70 text-sm">Escola Estadual Profissionalizante</span>
+            <div class="flex flex-col items-center floating">
+                <div class="logo-container mb-6">
+                    <img src="{{ asset('assets/img/logo_eep.png') }}" alt="Logo EEEP"
+                         class="w-48 lg:w-64 h-auto">
+                </div>
+                <span class="text-gray-300 text-center font-medium mb-2">Escola Estadual Profissionalizante</span>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span class="text-xs text-green-400">Sistema online</span>
+                </div>
             </div>
         </div>
 
         <!-- Rodapé -->
-        <div class="mt-8 text-center text-white/70 text-sm">
-            &copy;{{ date('Y') }} Sistema Guardião da Meta — Desenvolvido por Anderson Patrick
-        </div>
-
-        <!-- Oferta / Instagram abaixo do rodapé -->
-        <div class="mt-2 text-center text-white/70 text-sm flex items-center justify-center gap-2">
-            <a href="https://www.instagram.com/patricksousz_/" target="_blank" class="flex items-center gap-2 hover:text-emerald-400 transition">
-                Gostou do site? Me chame no Insta para criar o seu!
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.849.07 1.366.062 2.633.334 3.608 1.308.975.975 1.247 2.242 1.308 3.608.058 1.265.07 1.645.07 4.849s-.012 3.584-.07 4.849c-.062 1.366-.334 2.633-1.308 3.608-.975.975-2.242 1.247-3.608 1.308-1.265.058-1.645.07-4.849.07s-3.584-.012-4.849-.07c-1.366-.062-2.633-.334-3.608-1.308-.975-.975-1.247-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.849c.062-1.366.334-2.633 1.308-3.608.975-.975 2.242-1.247 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.014 7.052.072 5.78.13 4.633.405 3.678 1.36c-.955.955-1.23 2.102-1.288 3.374C2.014 5.668 2 6.077 2 9.337v5.326c0 3.26.014 3.669.072 4.949.058 1.272.333 2.419 1.288 3.374.955.955 2.102 1.23 3.374 1.288C8.332 23.986 8.741 24 12 24s3.668-.014 4.948-.072c1.272-.058 2.419-.333 3.374-1.288.955-.955 1.23-2.102 1.288-3.374.058-1.28.072-1.689.072-4.949V9.337c0-3.26-.014-3.669-.072-4.949-.058-1.272-.333-2.419-1.288-3.374-.955-.955-2.102-1.23-3.374-1.288C15.668.014 15.259 0 12 0z"/>
-                    <path d="M12 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a3.999 3.999 0 1 1 0-7.998 3.999 3.999 0 0 1 0 7.998z"/>
-                    <circle cx="18.406" cy="5.594" r="1.44"/>
-                </svg>
-            </a>
+        <div class="text-center text-gray-400 text-sm mb-2">
+            &copy;{{ date('Y') }} Sistema Guardião da Meta — Desenvolvido por <a href="https://www.instagram.com/patricksousz_/">Anderson Patrick</a>
         </div>
     </div>
 </body>

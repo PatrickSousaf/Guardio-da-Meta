@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 use App\Models\Curso;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
@@ -18,6 +19,13 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app['events']->listen(BuildingMenu::class, function (BuildingMenu $event) {
 
+            // Menu principal - Dashboard
+            $event->menu->add([
+                'text' => 'Dashboard',
+                'url'  => route('dashboard'),
+                'icon' => 'fas fa-fw fa-tachometer-alt',
+            ]);
+
             $event->menu->add(['header' => 'Turmas da Escola']);
 
             $anos = Curso::all()->groupBy('ano')->sortKeys();
@@ -30,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
                     $periodosSubmenu = collect(range(1, $curso->periodos))->map(function ($periodo) use ($curso, $ano) {
                         return [
                             'text' => "{$periodo}º Período",
-                            'icon' => 'fas fa-check',
+                            'icon' => 'fas fa-fw fa-check',
                             'url'  => route('admin.periodos.show', [
                                 'curso' => $curso->id,
                                 'ano' => $ano,
@@ -42,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
                     // Adiciona o menu Comparativo
                     $periodosSubmenu[] = [
                         'text' => 'Metas e Resultados',
-                        'icon' => 'fas fa-poll-h',
+                        'icon' => 'fas fa-fw fa-poll-h',
                         'url'  => route('admin.periodos.comparativo', [
                             'curso' => $curso->id,
                             'ano' => $ano,
@@ -54,27 +62,26 @@ class AppServiceProvider extends ServiceProvider
                         'text' => $curso->nome,
                         'url'  => '#',
                         'submenu' => $periodosSubmenu,
-                        'icon' => 'fas fa-bookmark',
+                        'icon' => 'fas fa-fw fa-bookmark',
                     ];
-
                 }
 
                 $event->menu->add([
                     'text'    => "{$ano}º Anos",
-                    'icon'    => 'fas fa-graduation-cap',
+                    'icon'    => 'fas fa-fw fa-graduation-cap',
                     'submenu' => $submenu,
                 ]);
             }
 
-
-            $event->menu->add(['header' => 'Configurações']);
-
-            $event->menu->add([
-                'text' => 'Gerenciamento dos Anos',
-                'url'  => route('admin.cursos.index'),
-                'icon' => 'fas fa-fw fa-cog',
-            ]);
-
+            // MENU DE ADMINISTRAÇÃO (APENAS PARA DIRETORES)
+            if (Auth::check() && Auth::user()->role === 'director') {
+                $event->menu->add(['header' => 'Administração']);
+                $event->menu->add([
+                    'text' => 'Gerenciamento dos Anos',
+                    'url'  => route('admin.cursos.index'),
+                    'icon' => 'fas fa-fw fa-cog',
+                ]);
+            }
 
             $event->menu->add([
                 'text' => 'Perfil',
@@ -82,6 +89,11 @@ class AppServiceProvider extends ServiceProvider
                 'icon' => 'fas fa-fw fa-user',
             ]);
 
+            $event->menu->add([
+                    'text' => 'Registrar Usuário',
+                    'url'  => route('register'),
+                    'icon' => 'fas fa-fw fa-user-plus',
+                ]);
         });
     }
 }

@@ -190,20 +190,18 @@
         <h5 class="card-title mb-0">Legenda das Cores</h5>
     </div>
     <div class="card-body">
-        <div class="row">
-            <div class="col-md-6">
-                <span class="badge bg-success p-2 mr-2">Verde</span>
+        <div class="d-flex flex-wrap align-items-center" style="gap: 200px;">
+            <div class="d-flex align-items-center" style="gap: 10px;">
+                <span class="badge bg-success p-2">Verde</span>
                 <span>Resultado atingiu ou superou a meta</span>
             </div>
-            <div class="col-md-6">
-                <span class="badge bg-warning p-2 mr-2">Amarelo</span>
+            <div class="d-flex align-items-center" style="gap: 10px;">
+                <span class="badge bg-warning p-2">Amarelo</span>
                 <span>Resultado abaixo da meta</span>
             </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-md-6">
-                <span class="badge bg-secondary p-2 mr-2">Cinza</span>
-                <span>Dados não disponíveis</span>
+            <div class="d-flex align-items-center" style="gap: 10px;">
+                <span class="badge bg-secondary p-2">Cinza</span>
+                <span>Dados não criados ainda</span>
             </div>
         </div>
     </div>
