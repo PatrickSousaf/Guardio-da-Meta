@@ -140,158 +140,16 @@
 @stop
 
 @section('css')
-    <style>
-        .avatar-preview {
-            position: relative;
-        }
-
-        .avatar-preview img {
-            transition: all 0.3s ease;
-            border: 3px solid #dee2e6;
-        }
-
-        .avatar-preview:hover img {
-            border-color: #007bff;
-            transform: scale(1.05);
-        }
-
-        .preview-avatar img {
-            transition: transform 0.3s ease;
-        }
-
-        .preview-avatar:hover img {
-            transform: rotate(5deg);
-        }
-
-        input[type="file"] {
-            cursor: pointer;
-        }
-
-        .card-primary {
-            border-top: 3px solid #007bff;
-        }
-
-        /* Estilos específicos para os botões de upload */
-        .btn-upload-group .btn {
-            border-radius: 0.375rem;
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn-upload-group .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .btn-upload-group .btn-primary {
-            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-            border: none;
-        }
-
-        .btn-upload-group .btn-outline-danger {
-            border: 1px solid #dc3545;
-            color: #dc3545;
-        }
-
-        .btn-upload-group .btn-outline-danger:hover {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        /* Centralização adicional */
-        .justify-content-center {
-            justify-content: center;
-        }
-
-        .mx-auto {
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
+<link rel="stylesheet" href="{{ asset('css/profile-edit.css') }}">
 @stop
 
 @section('js')
-    <script>
-        function previewImage(input) {
-            const preview = document.getElementById('avatarPreview');
-            const livePreview = document.getElementById('livePreview');
-            const file = input.files[0];
-
-            if (file) {
-                document.getElementById('removeAvatarInput').value = '0';
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    if (livePreview) {
-                        livePreview.src = e.target.result;
-                    }
-                }
-
-                reader.readAsDataURL(file);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Remover avatar
-            document.getElementById('removeAvatar').addEventListener('click', function() {
-                document.getElementById('avatar').value = '';
-                document.getElementById('removeAvatarInput').value = '1';
-                const defaultAvatar = 'https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=007bff&color=fff&size=150&bold=true';
-                document.getElementById('avatarPreview').src = defaultAvatar;
-
-                const livePreview = document.getElementById('livePreview');
-                if (livePreview) {
-                    livePreview.src = defaultAvatar;
-                }
-            });
-
-            // Preview em tempo real do nome
-            document.getElementById('name').addEventListener('input', function() {
-                const liveName = document.getElementById('liveName');
-                if (liveName) {
-                    liveName.textContent = this.value || '{{ $user->name }}';
-                }
-            });
-
-            // Preview em tempo real do email
-            document.getElementById('email').addEventListener('input', function() {
-                const liveEmail = document.getElementById('liveEmail');
-                if (liveEmail) {
-                    liveEmail.textContent = this.value || '{{ $user->email }}';
-                }
-            });
-
-            // Validação de tamanho de arquivo
-            document.getElementById('avatar').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file && file.size > 2 * 1024 * 1024) {
-                    alert('O arquivo é muito grande. Por favor, selecione uma imagem menor que 2MB.');
-                    this.value = '';
-                }
-            });
-
-            // Loading ao submeter o formulário
-            document.querySelector('form').addEventListener('submit', function() {
-                const submitBtn = this.querySelector('button[type="submit"]');
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Salvando...';
-                submitBtn.disabled = true;
-            });
-
-            // Máscara para telefone
-            document.getElementById('phone').addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length <= 11) {
-                    if (value.length <= 10) {
-                        value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-                    } else {
-                        value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-                    }
-                    e.target.value = value;
-                }
-            });
-        });
-    </script>
+<script>
+const userName = '{{ $user->name }}';
+const userEmail = '{{ $user->email }}';
+</script>
+<script src="{{ asset('js/profile-edit.js') }}"></script>
+<script>
+initProfileEdit(userName, userEmail);
+</script>
 @stop

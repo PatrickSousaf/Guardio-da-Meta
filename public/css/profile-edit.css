@@ -1,0 +1,68 @@
+.avatar-preview {
+    position: relative;
+}
+
+.avatar-preview img {
+    transition: all 0.3s ease;
+    border: 3px solid #dee2e6;
+}
+
+.avatar-preview:hover img {
+    border-color: #007bff;
+    transform: scale(1.05);
+}
+
+.preview-avatar img {
+    transition: transform 0.3s ease;
+}
+
+.preview-avatar:hover img {
+    transform: rotate(5deg);
+}
+
+input[type="file"] {
+    cursor: pointer;
+}
+
+.card-primary {
+    border-top: 3px solid #007bff;
+}
+
+/* Estilos específicos para os botões de upload */
+.btn-upload-group .btn {
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-upload-group .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-upload-group .btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+}
+
+.btn-upload-group .btn-outline-danger {
+    border: 1px solid #dc3545;
+    color: #dc3545;
+}
+
+.btn-upload-group .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Centralização adicional */
+.justify-content-center {
+    justify-content: center;
+}
+
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}

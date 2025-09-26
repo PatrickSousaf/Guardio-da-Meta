@@ -1,0 +1,80 @@
+.table th, .table td {
+    padding: 0.35rem;
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+input[readonly] {
+    background-color: #e6f7ff;
+    cursor: not-allowed;
+    font-weight: bold;
+}
+
+input.form-control-sm {
+    height: 32px;
+    text-align: center;
+}
+
+.table-active {
+    background-color: #cce5ff !important;
+}
+
+/* Cores personalizáveis */
+:root {
+    --bg-info: #17a2b8;          /* Azul */
+    --bg-primary: #007bff;       /* Azul médio */
+    --bg-success: #28a745;       /* Verde */
+    --bg-warning: #ffc107;       /* Amarelo */
+    --bg-secondary: #6c757d;     /* Cinza */
+
+    --bg-default: #d1ecf1;       /* Cor padrão para campos de valor */
+
+    --text-white: white;
+    --text-dark: #212529;
+    --table-active: #189a36;
+}
+
+/* Cores para os cabeçalhos */
+.bg-info { background-color: var(--bg-info) !important; color: var(--text-white); }
+.bg-primary { background-color: var(--bg-primary) !important; color: var(--text-white); }
+.bg-success { background-color: var(--bg-success) !important; color: var(--text-white); }
+.bg-warning { background-color: var(--bg-warning) !important; color: var(--text-dark); }
+.bg-secondary { background-color: var(--bg-secondary) !important; color: var(--text-white); }
+
+/* Cores para as células de dados */
+.bg-default { background-color: var(--bg-default) !important; }
+
+/* Cores para resultados */
+.bg-success { background-color: var(--bg-success) !important; color: var(--text-white) !important; }
+.bg-warning { background-color: var(--bg-warning) !important; color: var(--text-dark) !important; }
+.bg-secondary { background-color: var(--bg-secondary) !important; color: var(--text-white) !important; }
+
+.table-active {
+    background-color: var(--table-active) !important;
+}
+
+input[readonly] {
+    background-color: var(--bg-default);
+    border: 1px solid #b6d7e0;
+}
+
+.table-responsive {
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    border-radius: 0.25rem;
+}
+
+/* Alinhamento dos cabeçalhos */
+.table thead th {
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Melhorar visualização das cores */
+.bg-success, .bg-warning, .bg-secondary {
+    font-weight: bold;
+}
+
+.badge {
+    min-width: 60px;
+    text-align: center;
+}
