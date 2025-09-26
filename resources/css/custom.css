@@ -1,0 +1,51 @@
+/* Custom CSS for AdminLTE Dashboard */
+
+/* Small box enhancements */
+.small-box {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.small-box:hover {
+    transform: translateY(-5px);
+}
+
+/* Chart containers */
+.chart {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Calendar styling */
+#calendar {
+    margin: 0 auto;
+}
+
+/* Box header improvements */
+.box-header {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+/* Email widget styling */
+.textarea {
+    resize: none;
+}
+
+/* Map container */
+#world-map {
+    border-radius: 5px;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .small-box .icon {
+        display: none;
+    }
+
+    .small-box .inner {
+        text-align: center;
+    }
+}
