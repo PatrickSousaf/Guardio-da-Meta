@@ -7,9 +7,18 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\View\View;
 
 class PasswordController extends Controller
 {
+    /**
+     * Show the password change form.
+     */
+    public function edit(Request $request): View
+    {
+        return view('auth.passwords.edit');
+    }
+
     /**
      * Update the user's password.
      */

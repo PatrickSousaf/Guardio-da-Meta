@@ -40,21 +40,9 @@ Route::middleware('auth')->group(function () {
         ->name('verification.send');
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])->name('password.confirm');
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+    Route::get('password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/invite-codes', [InviteCodeController::class, 'index'])
-        ->name('invite-codes.index');
-    Route::get('/invite-codes/create', [InviteCodeController::class, 'create'])
-        ->name('invite-codes.create');
-    Route::post('/invite-codes', [InviteCodeController::class, 'store'])
-        ->name('invite-codes.store');
-    Route::delete('/invite-codes/{inviteCode}', [InviteCodeController::class, 'destroy'])
-        ->name('invite-codes.destroy');
-    Route::patch('/invite-codes/{inviteCode}/deactivate', [InviteCodeController::class, 'deactivate'])
-        ->name('invite-codes.deactivate');
-    Route::patch('/invite-codes/{inviteCode}/activate', [InviteCodeController::class, 'activate'])
-        ->name('invite-codes.activate');
-});
+// Invite code routes removed - controller not found

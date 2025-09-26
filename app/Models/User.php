@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'avatar',
     ];
 
     /**
@@ -59,6 +60,19 @@ class User extends Authenticatable
 
     public function isManagement()
     {
-        return $this->role === 'teacher';
+        return $this->role === 'management';
+    }
+
+    /**
+     * Get the user's avatar for AdminLTE
+     */
+    public function adminlte_image()
+    {
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+
+        // Return default avatar using UI Avatars service
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=007bff&color=fff&size=150&bold=true';
     }
 }

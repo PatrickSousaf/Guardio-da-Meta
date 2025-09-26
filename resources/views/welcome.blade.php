@@ -69,6 +69,8 @@
             border: none;
             position: relative;
             overflow: hidden;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-primary::after {
@@ -89,6 +91,13 @@
         .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
         }
 
         .feature-list li {
@@ -155,6 +164,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            color: white; /* Fallback */
         }
 
         .highlight {
@@ -173,10 +183,12 @@
             color: #E5E7EB;
             font-weight: 500;
             transition: all 0.3s ease;
+            text-decoration: none;
         }
 
         .instagram-link:hover {
             color: var(--primary-light);
+            text-decoration: underline;
         }
 
         .status-indicator {
@@ -197,6 +209,25 @@
 
         .text-spacing {
             letter-spacing: 0.5px;
+        }
+
+        /* Responsividade melhorada */
+        @media (max-width: 768px) {
+            .main-card {
+                padding: 24px;
+                text-align: center;
+            }
+
+            .feature-list li {
+                padding-left: 30px;
+                font-size: 1rem;
+            }
+
+            .feature-list li:before {
+                width: 24px;
+                height: 24px;
+                font-size: 1.2em;
+            }
         }
     </style>
 </head>
@@ -224,7 +255,7 @@
                     <li><span class="font-semibold">Relatórios detalhados</span> e personalizados</li>
                 </ul>
 
-                <!-- Botões de autenticação (APENAS O LOGIN CENTRALIZADO) -->
+                <!-- Botões de autenticação -->
                 <div class="flex justify-center mb-8">
                     @if (Route::has('login'))
                         @auth
@@ -241,7 +272,7 @@
 
                 <!-- Call to action -->
                 <div class="cta-box">
-                    <p class="text-gray-200 flex items-center justify-center text-sm whitespace-nowrap">
+                    <p class="text-gray-200 flex items-center justify-center text-sm flex-wrap">
                         <span class="text-lg mr-2">🚀</span>
                         Entre agora e <span class="font-semibold text-green-300 ml-1">agilize os círculos de conversa da sua escola!</span>
                     </p>
@@ -265,7 +296,8 @@
 
         <!-- Rodapé -->
         <div class="text-center text-gray-400 text-sm mb-2">
-            &copy;{{ date('Y') }} Sistema Guardião da Meta — Desenvolvido por <a href="https://www.instagram.com/patricksousz_/">Anderson Patrick</a>
+            &copy;{{ date('Y') }} Sistema Guardião da Meta — Desenvolvido por
+            <a href="https://www.instagram.com/patricksousz_/" class="instagram-link">Anderson Patrick</a>
         </div>
     </div>
 </body>

@@ -73,29 +73,32 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
 
+            // Verifica se o usuário está autenticado
+            if (Auth::check()) {
 
-
-            if (Auth::check() && (Auth::user()->isManagement() || Auth::user()->isDirector())) {
+                // Menu de Perfil disponível para todos os usuários logados
                 $event->menu->add(['header' => 'Administração']);
 
                 $event->menu->add([
-                    'text' => 'Gerenciamento dos Anos',
-                    'url'  => route('admin.cursos.index'),
-                    'icon' => 'fas fa-fw fa-cog',
+                    'text' => 'Perfil',
+                    'url'  => route('profile.show'),
+                    'icon' => 'fas fa-fw fa-user',
                 ]);
 
-                $event->menu->add([
-                    'text' => 'Registrar Usuário',
-                    'url'  => route('register'),
-                    'icon' => 'fas fa-fw fa-user-plus',
-                ]);
-                
-                $event->menu->add([
-                'text' => 'Perfil',
-                'url'  => route('profile.edit'),
-                'icon' => 'fas fa-fw fa-user',
-            ]);
+                // Apenas management e director podem acessar estas opções
+                if (Auth::user()->isManagement() || Auth::user()->isDirector()) {
+                    $event->menu->add([
+                        'text' => 'Gerenciamento dos Anos',
+                        'url'  => route('admin.cursos.index'),
+                        'icon' => 'fas fa-fw fa-cog',
+                    ]);
 
+                    $event->menu->add([
+                        'text' => 'Registrar Usuário',
+                        'url'  => route('register'),
+                        'icon' => 'fas fa-fw fa-user-plus',
+                    ]);
+                }
             }
         });
     }

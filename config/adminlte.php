@@ -138,7 +138,7 @@ return [
     'usermenu_enabled' => true,
     'usermenu_header' => false,
     'usermenu_header_class' => 'bg-primary',
-    'usermenu_image' => false,
+    'usermenu_image' => true,
     'usermenu_desc' => false,
     'usermenu_profile_url' => false,
 
@@ -265,7 +265,7 @@ return [
     'register_url' => null,
     'password_reset_url' => 'forgot-password',
     'password_email_url' => 'password/email',
-    'profile_url' => false,
+    'profile_url' => '/profile',
     'disable_darkmode_routes' => false,
 
     /*
@@ -304,7 +304,7 @@ return [
         // Navbar items:
         [
             'type' => 'navbar-search',
-            'text' => 'search',
+            'text' => 'Procurar',
             'topnav_right' => true,
         ],
         [
@@ -315,7 +315,7 @@ return [
         // Sidebar items:
         [
             'type' => 'sidebar-menu-search',
-            'text' => 'search',
+            'text' => 'Procurar',
         ],
         [
             'text' => 'blog',
