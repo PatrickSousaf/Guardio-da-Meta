@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Iluminate\Contracts\Auth\CanResetPassword;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatablec implements CanResetPassword
+class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -59,17 +59,6 @@ class User extends Authenticatablec implements CanResetPassword
 
     public function isManagement()
     {
-        return $this->role === 'management';
-    }
-
-    /**
-     * Send the password reset notification.
-     *
-     * @param  string  $token
-     * @return void
-     */
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify(new \App\Notifications\ResetPasswordNotification($token));
+        return $this->role === 'teacher';
     }
 }
