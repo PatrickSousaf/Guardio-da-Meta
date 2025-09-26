@@ -5,10 +5,12 @@
 @section('content_header')
     <div class="d-flex justify-content-between align-items-center">
         <h1><i class="fas fa-chart-line mr-2"></i>{{ $periodo }} - Visão Geral</h1>
+        @if(Auth::user()->isManagement() || Auth::user()->isDirector())
         <div>
             <button onclick="toggleEditMode()" class="btn btn-success mr-2"><i class="fas fa-edit"></i> Editar</button>
             <button onclick="saveData()" class="btn btn-warning"><i class="fas fa-save"></i> Salvar Dados</button>
         </div>
+        @endif
     </div>
 @stop
 
@@ -29,6 +31,7 @@
         </div>
     </div>
 
+    @if(Auth::user()->isManagement() || Auth::user()->isDirector())
     <!-- Seção de Importação CSV -->
     <div class="row mb-4">
         <div class="col-md-12">
@@ -56,6 +59,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     <!-- Métricas em uma única tabela retangular -->
     <div class="row">

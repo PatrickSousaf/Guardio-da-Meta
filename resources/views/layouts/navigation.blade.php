@@ -98,25 +98,31 @@
         </div>
 
         @auth
-            <!-- ... outros links ... -->
-            <a href="{{ route('admin.cursos.index') }}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                Cursos
-            </a>
+            @if(Auth::user()->isManagement() || Auth::user()->isDirector())
+                <!-- ... outros links ... -->
+                <a href="{{ route('admin.cursos.index') }}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                    Cursos
+                </a>
+            @endif
         @endauth
 
         @auth
-        @if(Auth::user()->role === 'director')
             <!-- Navigation Links -->
             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
                 </x-nav-link>
 
-                <x-nav-link :href="route('register')" :active="request()->routeIs('register')">
-                    <i class="fas fa-user-plus mr-1"></i> {{ __('Registrar Usuários') }}
-                </x-nav-link>
+                @if(Auth::user()->isManagement() || Auth::user()->isDirector())
+                    <x-nav-link :href="route('register')" :active="request()->routeIs('register')">
+                        <i class="fas fa-user-plus mr-1"></i> {{ __('Registrar Usuários') }}
+                    </x-nav-link>
+                @else
+                    <a href="#" onclick="alert('Não é possível acessar porque você é professor. Apenas gestores e diretores podem registrar usuários.'); return false;" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 transition duration-150 ease-in-out">
+                        <i class="fas fa-user-plus mr-1"></i> {{ __('Registrar Usuários') }}
+                    </a>
+                @endif
             </div>
-        @endif
-    @endauth
+        @endauth
     </div>
 </nav>

@@ -27,30 +27,30 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// ROTAS DE REGISTRO SIMPLIFICADO (APENAS PARA DIRETORES)
-Route::middleware(['auth', 'verified'])->group(function () {
+// ROTAS DE REGISTRO SIMPLIFICADO (APENAS PARA GESTORES E DIRETORES)
+Route::middleware(['auth'])->group(function () {
     Route::get('/register', [RegisteredUserController::class, 'create'])
         ->name('register')
-        ->middleware('can:register-users'); // Ou use verificação de role no controller
+        ->middleware('isManagementOrDirector');
 
     Route::post('/register', [RegisteredUserController::class, 'store'])
         ->name('register.store')
-        ->middleware('can:register-users'); // Ou use verificação de role no controller
+        ->middleware('isManagementOrDirector');
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
     // Rotas explícitas para cursos
     Route::get('/cursos', [CursoController::class, 'index'])->name('cursos.index');
-    Route::get('/cursos/create', [CursoController::class, 'create'])->name('cursos.create');
-    Route::post('/cursos', [CursoController::class, 'store'])->name('cursos.store');
-    Route::get('/cursos/{curso}/edit', [CursoController::class, 'edit'])->name('cursos.edit');
-    Route::put('/cursos/{curso}', [CursoController::class, 'update'])->name('cursos.update');
-    Route::delete('/cursos/{curso}', [CursoController::class, 'destroy'])->name('cursos.destroy');
-    Route::post('/cursos/avancar-ano', [CursoController::class, 'avancarAno'])->name('cursos.avancar-ano');
+    Route::get('/cursos/create', [CursoController::class, 'create'])->name('cursos.create')->middleware('isManagementOrDirector');
+    Route::post('/cursos', [CursoController::class, 'store'])->name('cursos.store')->middleware('isManagementOrDirector');
+    Route::get('/cursos/{curso}/edit', [CursoController::class, 'edit'])->name('cursos.edit')->middleware('isManagementOrDirector');
+    Route::put('/cursos/{curso}', [CursoController::class, 'update'])->name('cursos.update')->middleware('isManagementOrDirector');
+    Route::delete('/cursos/{curso}', [CursoController::class, 'destroy'])->name('cursos.destroy')->middleware('isManagementOrDirector');
+    Route::post('/cursos/avancar-ano', [CursoController::class, 'avancarAno'])->name('cursos.avancar-ano')->middleware('isManagementOrDirector');
 });
 
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('cursos', \App\Http\Controllers\CursoController::class);
+Route::prefix('admin')->name('admin.')->middleware('isManagementOrDirector')->group(function () {
+    Route::resource('cursos', \App\Http\Controllers\CursoController::class)->except(['index', 'show']);
     Route::post('cursos/avancar-ano', [\App\Http\Controllers\CursoController::class, 'avancarAno'])
         ->name('cursos.avancar-ano');
     Route::post('cursos/voltar-ano', [\App\Http\Controllers\CursoController::class, 'voltarAno'])
@@ -63,10 +63,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         ->name('periodos.show');
 
     Route::post('periodos/processar-planilha', [PlanilhaController::class, 'importar'])
-        ->name('periodos.processar-planilha');
+        ->name('periodos.processar-planilha')
+        ->middleware('isManagementOrDirector');
 
     Route::post('periodos/salvar-dados', [PeriodoController::class, 'storeData'])
-        ->name('periodos.salvar-dados');
+        ->name('periodos.salvar-dados')
+        ->middleware('isManagementOrDirector');
 
     // Rota para o comparativo
     Route::get('cursos/{curso}/ano/{ano}/periodo/{periodo}/comparativo', [PeriodoController::class, 'comparativo'])
@@ -74,10 +76,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Rota para salvar metas - CORRIGIDA
     Route::post('periodos/salvar-metas', [PeriodoController::class, 'salvarMetas'])
-        ->name('periodos.salvar-metas');
+        ->name('periodos.salvar-metas')
+        ->middleware('isManagementOrDirector');
 });
 
 Route::post('/periodos/importar-csv', [PlanilhaController::class, 'importar'])
-    ->name('admin.periodos.importar-csv');
+    ->name('admin.periodos.importar-csv')
+    ->middleware('isManagementOrDirector');
 
 require __DIR__.'/auth.php';

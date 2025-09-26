@@ -73,27 +73,30 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
 
-            // MENU DE ADMINISTRAÇÃO (APENAS PARA DIRETORES)
-            if (Auth::check() && Auth::user()->role === 'director') {
+
+
+            if (Auth::check() && (Auth::user()->isManagement() || Auth::user()->isDirector())) {
                 $event->menu->add(['header' => 'Administração']);
+
                 $event->menu->add([
                     'text' => 'Gerenciamento dos Anos',
                     'url'  => route('admin.cursos.index'),
                     'icon' => 'fas fa-fw fa-cog',
                 ]);
-            }
 
-            $event->menu->add([
+                $event->menu->add([
+                    'text' => 'Registrar Usuário',
+                    'url'  => route('register'),
+                    'icon' => 'fas fa-fw fa-user-plus',
+                ]);
+                
+                $event->menu->add([
                 'text' => 'Perfil',
                 'url'  => route('profile.edit'),
                 'icon' => 'fas fa-fw fa-user',
             ]);
 
-            $event->menu->add([
-                    'text' => 'Registrar Usuário',
-                    'url'  => route('register'),
-                    'icon' => 'fas fa-fw fa-user-plus',
-                ]);
+            }
         });
     }
 }

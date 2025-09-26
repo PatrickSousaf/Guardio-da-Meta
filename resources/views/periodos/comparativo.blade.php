@@ -174,12 +174,14 @@
                     @endfor
                 </tbody>
             </table>
+            @if(Auth::user()->isManagement() || Auth::user()->isDirector())
             <br>
             <div class="text-right">
                 <button onclick="toggleEditMode()" class="btn btn-success mr-2"><i class="fas fa-edit"></i> Editar Metas</button>
                 <button onclick="saveMetaData()" class="btn btn-success"><i class="fas fa-save"></i> Salvar Metas</button>
             </div>
             <br>
+            @endif
         </div>
     </div>
 </div>
