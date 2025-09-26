@@ -1,13 +1,17 @@
-# TODO: Corrigir remoção de foto de perfil
+# TODO: Make Site Responsive
 
-## Etapas Concluídas
-- [x] Atualizar ProfileUpdateRequest para validar remove_avatar
-- [x] Atualizar ProfileController para lidar com remoção de avatar
-- [x] Atualizar view profile/edit.blade.php para adicionar input oculto e ajustar botões
-- [x] Atualizar JavaScript para definir flag de remoção e resetar ao selecionar arquivo
-- [x] Ajustar CSS para botões terem o mesmo tamanho
+## Plan Overview
+- Address fixed sidebar in admin.blade.php for mobile.
+- Enhance custom.css with more responsive rules.
+- Add responsive handling to periodo.css for tables.
+- Wrap tables in periodos views with table-responsive.
+- Minor tweaks to welcome.blade.php for smaller screens.
 
-## Próximos Passos
-- [ ] Testar funcionalidade de remoção de avatar
-- [ ] Verificar se os botões têm o mesmo tamanho e espaçamento
-- [ ] Testar upload de nova foto após remoção
+## Steps
+- [x] Edit resources/views/layouts/admin.blade.php: Make sidebar responsive (hide on small screens).
+- [x] Edit resources/css/custom.css: Add media queries for mobile padding, fonts, etc.
+- [x] Edit public/css/periodo.css: Add mobile adjustments for tables.
+- [x] Edit resources/views/periodos/show.blade.php: Wrap table in table-responsive. (Already wrapped)
+- [x] Edit resources/views/periodos/comparativo.blade.php: Wrap table in table-responsive. (Already wrapped)
+- [x] Edit resources/views/welcome.blade.php: Add media query for max-width: 480px.
+- [x] Test responsiveness after changes. (Added overflow-x: auto to table-responsive for horizontal scroll)

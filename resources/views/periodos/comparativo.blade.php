@@ -25,7 +25,7 @@
         <h3 class="card-title text-center w-100">Métrica das metas e resultados gerais: {{ $curso->nome }} </h3>
     </div>
     <div class="card-body p-2">
-        <div class="table-responsive">
+        <div class="table-responsive" style="overflow-x: auto;">
             <table class="table table-bordered table-hover text-center mb-0">
                 <thead class="bg-success text-white">
                     <tr>

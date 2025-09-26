@@ -106,3 +106,47 @@
         font-weight: 600;
         padding: 12px 6px;
     }
+
+    /* Responsive table adjustments */
+    @media (max-width: 768px) {
+        .table {
+            font-size: 12px;
+        }
+
+        .table th, .table td {
+            padding: 6px 4px;
+            white-space: nowrap;
+        }
+
+        .table-responsive {
+            font-size: 11px;
+            overflow-x: auto;
+        }
+
+        .metric-input, .form-control {
+            font-size: 12px;
+            height: 32px;
+        }
+
+        .input-group-append .input-group-text {
+            font-size: 12px;
+            padding: 6px 8px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .table th, .table td {
+            padding: 4px 2px;
+            font-size: 10px;
+        }
+
+        .table thead tr:first-child th {
+            font-size: 12px;
+            padding: 8px 4px;
+        }
+
+        .bg-lightblue, .bg-info, .bg-success, .bg-warning, .bg-custom {
+            padding: 4px 6px;
+            font-size: 10px;
+        }
+    }

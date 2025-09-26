@@ -20,7 +20,7 @@
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100 flex">
         <!-- Sidebar -->
-        <div class="w-64 bg-gray-800 text-white">
+        <div class="w-64 bg-gray-800 text-white hidden md:block">
             <div class="p-4">
                 <h2 class="text-lg font-semibold">Ferramentas Admin</h2>
             </div>
@@ -33,7 +33,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1">
+        <div class="flex-1 w-full md:w-auto">
             @include('layouts.navigation')
 
             <!-- Page Heading -->

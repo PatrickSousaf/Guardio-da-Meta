@@ -229,6 +229,40 @@
                 font-size: 1.2em;
             }
         }
+
+        @media (max-width: 480px) {
+            .main-card {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .feature-list li {
+                font-size: 0.9rem;
+                padding-left: 25px;
+            }
+
+            .feature-list li:before {
+                width: 20px;
+                height: 20px;
+                font-size: 1em;
+            }
+
+            .btn-primary {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .logo-container {
+                padding: 15px;
+            }
+
+            .logo-container img {
+                width: 200px;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">

@@ -69,7 +69,7 @@
                     <h3 class="card-title"><i class="fas fa-table mr-2"></i>Métricas da Turma</h3>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive">
+                    <div class="table-responsive" style="overflow-x: auto;">
                         <table class="table table-bordered table-hover text-center mb-0">
                             <thead class="bg-lightblue">
                                 <tr>
