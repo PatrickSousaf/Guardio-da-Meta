@@ -45,8 +45,14 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
-        // Handle avatar upload
-        if ($request->hasFile('avatar')) {
+        // Handle avatar upload or removal
+        if ($request->boolean('remove_avatar')) {
+            // Remove avatar
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $user->avatar = null;
+        } elseif ($request->hasFile('avatar')) {
             // Delete old avatar if exists
             if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);

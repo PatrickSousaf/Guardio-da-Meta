@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card card-primary">
                 <div class="card-header">
@@ -20,12 +20,13 @@
                     @method('PATCH')
 
                     <div class="card-body">
-                        <!-- Upload de Foto -->
+                        <!-- Upload de Foto Centralizado -->
                         <div class="form-group">
-                            <label for="avatar">Foto do Perfil</label>
-                            <div class="row">
-                                <div class="col-md-4 text-center">
-                                    <div class="avatar-preview mb-3">
+                            <div class="row justify-content-center">
+                                <div class="col-md-6 text-center">
+                                    <label for="avatar" class="d-block mb-3">Foto do Perfil</label>
+
+                                    <div class="avatar-preview mb-4">
                                         @if($user->avatar)
                                             <img id="avatarPreview" src="{{ asset('storage/' . $user->avatar) }}"
                                                  class="img-circle elevation-2" alt="Avatar Preview"
@@ -36,34 +37,29 @@
                                                  style="width: 150px; height: 150px; object-fit: cover;">
                                         @endif
                                     </div>
-                                    <div class="btn-group">
-                                        <label for="avatar" class="btn btn-primary btn-sm">
+
+                                    <div class="d-flex flex-column gap-2 mx-auto" style="max-width: 200px;">
+                                        <label for="avatar" class="btn btn-primary btn-sm w-100">
                                             <i class="fas fa-camera mr-1"></i> Escolher Foto
                                         </label>
-                                        <button type="button" id="removeAvatar" class="btn btn-danger btn-sm">
+                                        <button type="button" id="removeAvatar" class="btn btn-outline-danger btn-sm w-100">
                                             <i class="fas fa-trash mr-1"></i> Remover
                                         </button>
                                     </div>
+
                                     <input type="file" id="avatar" name="avatar" accept="image/*"
                                            class="d-none" onchange="previewImage(this)">
+                                    <input type="hidden" name="remove_avatar" id="removeAvatarInput" value="0">
+
                                     @error('avatar')
                                         <span class="invalid-feedback d-block" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
+
                                     <small class="form-text text-muted d-block mt-2">
                                         Formatos permitidos: JPG, PNG, GIF. Tamanho máximo: 2MB
                                     </small>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="alert alert-info">
-                                        <h6><i class="fas fa-info-circle mr-2"></i>Dicas para uma boa foto:</h6>
-                                        <ul class="mb-0 pl-3">
-                                            <li>Use uma imagem quadrada para melhor qualidade</li>
-                                            <li>Evite fotos muito escuras ou claras</li>
-                                            <li>O rosto deve estar visível e centralizado</li>
-                                        </ul>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -104,7 +100,7 @@
                             @enderror
                         </div>
 
-                        <!-- Telefone (campo adicional) -->
+                        <!-- Telefone -->
                         <div class="form-group">
                             <label for="phone">Telefone</label>
                             <div class="input-group">
@@ -120,20 +116,6 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
-                        </div>
-
-                        <!-- Bio (campo adicional) -->
-                        <div class="form-group">
-                            <label for="bio">Biografia</label>
-                            <textarea class="form-control @error('bio') is-invalid @enderror" id="bio"
-                                      name="bio" rows="3" placeholder="Conte um pouco sobre você..."
-                                      maxlength="255">{{ old('bio', $user->bio ?? '') }}</textarea>
-                            @error('bio')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                            <small class="form-text text-muted">Máximo de 255 caracteres</small>
                         </div>
                     </div>
 
@@ -157,53 +139,6 @@
                 </form>
             </div>
         </div>
-
-        <div class="col-md-4">
-            <!-- Preview Card -->
-            <div class="card card-info">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-eye mr-2"></i>Pré-visualização
-                    </h3>
-                </div>
-                <div class="card-body text-center">
-                    <div class="preview-avatar mb-3">
-                        <img id="livePreview" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=007bff&color=fff&size=150&bold=true' }}"
-                             class="img-circle elevation-3" style="width: 120px; height: 120px; object-fit: cover;">
-                    </div>
-                    <h4 id="liveName">{{ $user->name }}</h4>
-                    <p class="text-muted" id="liveEmail">{{ $user->email }}</p>
-                    <span class="badge badge-{{ $user->role == 'director' ? 'danger' : ($user->role == 'management' ? 'warning' : 'success') }}">
-                        {{ ucfirst($user->role) }}
-                    </span>
-                </div>
-            </div>
-
-            <!-- Dicas Card -->
-            <div class="card card-secondary">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-lightbulb mr-2"></i>Dicas
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <ul class="list-unstyled">
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success mr-2"></i>
-                            Mantenha suas informações atualizadas
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success mr-2"></i>
-                            Use uma foto que te represente bem
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success mr-2"></i>
-                            A biografia ajuda na identificação
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
     </div>
 @stop
 
@@ -223,10 +158,6 @@
             transform: scale(1.05);
         }
 
-        .btn-group .btn {
-            border-radius: 0.25rem;
-        }
-
         .preview-avatar img {
             transition: transform 0.3s ease;
         }
@@ -243,17 +174,43 @@
             border-top: 3px solid #007bff;
         }
 
-        .card-info {
-            border-top: 3px solid #17a2b8;
+        /* Estilos específicos para os botões de upload */
+        .btn-upload-group .btn {
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
         }
 
-        .card-secondary {
-            border-top: 3px solid #6c757d;
+        .btn-upload-group .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .character-count {
-            font-size: 0.8rem;
-            text-align: right;
+        .btn-upload-group .btn-primary {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            border: none;
+        }
+
+        .btn-upload-group .btn-outline-danger {
+            border: 1px solid #dc3545;
+            color: #dc3545;
+        }
+
+        .btn-upload-group .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        /* Centralização adicional */
+        .justify-content-center {
+            justify-content: center;
+        }
+
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
 @stop
@@ -266,11 +223,14 @@
             const file = input.files[0];
 
             if (file) {
+                document.getElementById('removeAvatarInput').value = '0';
                 const reader = new FileReader();
 
                 reader.onload = function(e) {
                     preview.src = e.target.result;
-                    livePreview.src = e.target.result;
+                    if (livePreview) {
+                        livePreview.src = e.target.result;
+                    }
                 }
 
                 reader.readAsDataURL(file);
@@ -281,47 +241,36 @@
             // Remover avatar
             document.getElementById('removeAvatar').addEventListener('click', function() {
                 document.getElementById('avatar').value = '';
+                document.getElementById('removeAvatarInput').value = '1';
                 const defaultAvatar = 'https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=007bff&color=fff&size=150&bold=true';
                 document.getElementById('avatarPreview').src = defaultAvatar;
-                document.getElementById('livePreview').src = defaultAvatar;
+
+                const livePreview = document.getElementById('livePreview');
+                if (livePreview) {
+                    livePreview.src = defaultAvatar;
+                }
             });
 
             // Preview em tempo real do nome
             document.getElementById('name').addEventListener('input', function() {
-                document.getElementById('liveName').textContent = this.value || '{{ $user->name }}';
+                const liveName = document.getElementById('liveName');
+                if (liveName) {
+                    liveName.textContent = this.value || '{{ $user->name }}';
+                }
             });
 
             // Preview em tempo real do email
             document.getElementById('email').addEventListener('input', function() {
-                document.getElementById('liveEmail').textContent = this.value || '{{ $user->email }}';
+                const liveEmail = document.getElementById('liveEmail');
+                if (liveEmail) {
+                    liveEmail.textContent = this.value || '{{ $user->email }}';
+                }
             });
-
-            // Contador de caracteres para biografia
-            const bioTextarea = document.getElementById('bio');
-            if (bioTextarea) {
-                // Adiciona contador de caracteres
-                const charCount = document.createElement('div');
-                charCount.className = 'character-count text-muted mt-1';
-                charCount.innerHTML = `<span id="charCount">${bioTextarea.value.length}</span>/255 caracteres`;
-                bioTextarea.parentNode.appendChild(charCount);
-
-                bioTextarea.addEventListener('input', function() {
-                    document.getElementById('charCount').textContent = this.value.length;
-
-                    if (this.value.length > 255) {
-                        charCount.classList.add('text-danger');
-                        charCount.classList.remove('text-muted');
-                    } else {
-                        charCount.classList.remove('text-danger');
-                        charCount.classList.add('text-muted');
-                    }
-                });
-            }
 
             // Validação de tamanho de arquivo
             document.getElementById('avatar').addEventListener('change', function(e) {
                 const file = e.target.files[0];
-                if (file && file.size > 2 * 1024 * 1024) { // 2MB
+                if (file && file.size > 2 * 1024 * 1024) {
                     alert('O arquivo é muito grande. Por favor, selecione uma imagem menor que 2MB.');
                     this.value = '';
                 }
@@ -334,7 +283,7 @@
                 submitBtn.disabled = true;
             });
 
-            // Máscara simples para telefone
+            // Máscara para telefone
             document.getElementById('phone').addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\D/g, '');
                 if (value.length <= 11) {
