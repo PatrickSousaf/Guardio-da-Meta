@@ -5,6 +5,8 @@
 .avatar-preview img {
     transition: all 0.3s ease;
     border: 3px solid #dee2e6;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .avatar-preview:hover img {

@@ -177,6 +177,8 @@
             padding: 3px;
             width: 150px;
             height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
             transition: all 0.3s ease;
         }
 

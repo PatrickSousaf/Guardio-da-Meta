@@ -88,6 +88,8 @@
         <link rel="manifest" crossorigin="use-credentials" href="{{ asset('favicons/manifest.json') }}">
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="{{ asset('favicons/ms-icon-144x144.png') }}">
+    @else
+        <link rel="icon" type="image/png" href="{{ asset('assets/img/logo_eep.png') }}" />
     @endif
 
 </head>

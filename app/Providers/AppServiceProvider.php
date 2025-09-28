@@ -7,6 +7,7 @@ use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 use App\Models\Curso;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if ($this->app->environment('production') || str_contains(request()->getHttpHost(), 'ngrok-free.dev')) {
+            URL::forceScheme('https');
+        }
         $this->app['events']->listen(BuildingMenu::class, function (BuildingMenu $event) {
 
             // Menu principal - Dashboard

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bem-vindo | Guardião da Meta</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo_eep.png') }}" />
+
     <!-- Fonte e Tailwind -->
     <link href="https://fonts.bunny.net/css?family=poppins:300,400,500,600,700&display=swap" rel="stylesheet" />
     @vite('resources/css/app.css')
@@ -128,7 +131,7 @@
             overflow: hidden;
             border-radius: 16px;
             padding: 20px;
-            background: white !important;
+            background: transparent;
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
@@ -317,7 +320,7 @@
             <!-- Logo -->
             <div class="flex flex-col items-center floating">
                 <div class="logo-container mb-6">
-                    <img src="{{ asset('assets/img/logo_eep.png') }}" alt="Logo EEEP"
+                     <img src="{{ url('assets/img/logo123 (1).jpg') }}" alt="Logo EEEP"
                          class="w-48 lg:w-64 h-auto">
                 </div>
                 <span class="text-gray-300 text-center font-medium mb-2">Escola Estadual Profissionalizante</span>
