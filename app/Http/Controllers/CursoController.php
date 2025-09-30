@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Curso;
+use App\Models\PeriodoDado;
+use App\Models\MetaPeriodo;
 use Illuminate\Http\Request;
 
 class CursoController extends Controller
@@ -67,25 +69,39 @@ class CursoController extends Controller
 
     public function avancarAno()
     {
+        // Obter IDs dos cursos que serão afetados antes das mudanças
+        $cursosParaResetar = Curso::whereIn('ano', [1, 2, 3])->pluck('id')->toArray();
+
         // Atualiza os cursos: 1º ano vira 2º, 2º vira 3º, e remove os 3º anos
         Curso::where('ano', 3)->delete();
         Curso::where('ano', 2)->update(['ano' => 3]);
         Curso::where('ano', 1)->update(['ano' => 2]);
 
+        // Resetar dados dos períodos e metas para os cursos afetados
+        PeriodoDado::whereIn('curso_id', $cursosParaResetar)->delete();
+        MetaPeriodo::whereIn('curso_id', $cursosParaResetar)->delete();
+
         return redirect()->route('admin.cursos.index')
-            ->with('success', 'Ano letivo avançado com sucesso. Os cursos do 3º ano foram removidos.');
+            ->with('success', 'Ano letivo avançado com sucesso. Os cursos do 3º ano foram removidos e todos os dados salvos nos períodos e comparativos foram resetados.');
     }
 
     public function voltarAno()
     {
+        // Obter IDs dos cursos que serão afetados antes das mudanças
+        $cursosParaResetar = Curso::whereIn('ano', [2, 3])->pluck('id')->toArray();
+
         // Voltar os anos: 2º ano vira 1º, 3º vira 2º
         Curso::where('ano', 2)->update(['ano' => 1]);
         Curso::where('ano', 3)->update(['ano' => 2]);
+
+        // Resetar dados dos períodos e metas para os cursos afetados
+        PeriodoDado::whereIn('curso_id', $cursosParaResetar)->delete();
+        MetaPeriodo::whereIn('curso_id', $cursosParaResetar)->delete();
 
         // Nota: Não recriamos os cursos do 3º ano que foram excluídos no avanço
         // pois não temos como saber quais eram
 
         return redirect()->route('admin.cursos.index')
-            ->with('success', 'Ano letivo retrocedido com sucesso. Nota: Os cursos do 3º ano excluídos anteriormente não foram restaurados.');
+            ->with('success', 'Ano letivo retrocedido com sucesso. Todos os dados salvos nos períodos e comparativos foram resetados. Nota: Os cursos do 3º ano excluídos anteriormente não foram restaurados.');
     }
 }
