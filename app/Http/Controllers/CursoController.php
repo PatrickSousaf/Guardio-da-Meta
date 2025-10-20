@@ -6,6 +6,8 @@ use App\Models\Curso;
 use App\Models\PeriodoDado;
 use App\Models\MetaPeriodo;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class CursoController extends Controller
 {
@@ -69,22 +71,22 @@ class CursoController extends Controller
 
     public function avancarAno()
     {
-        // Obter IDs dos cursos que serão afetados antes das mudanças
-        $cursosParaResetar = Curso::whereIn('ano', [1, 2, 3])->pluck('id')->toArray();
+        // Antes de avançar, gerar PDFs dos dados atuais para todos os cursos
+        $this->gerarPdfsAntesAvanco();
 
         // Atualiza os cursos: 1º ano vira 2º, 2º vira 3º, e remove os 3º anos
         Curso::where('ano', 3)->delete();
         Curso::where('ano', 2)->update(['ano' => 3]);
         Curso::where('ano', 1)->update(['ano' => 2]);
 
-        // Resetar dados dos períodos e metas para os cursos afetados
-        PeriodoDado::whereIn('curso_id', $cursosParaResetar)->delete();
-        MetaPeriodo::whereIn('curso_id', $cursosParaResetar)->delete();
+
+        // Resetar dados dos períodos após avanço
+        $this->resetarDadosPeriodos();
 
         return redirect()->route('admin.cursos.index')
-            ->with('success', 'Ano letivo avançado com sucesso. Os cursos do 3º ano foram removidos e todos os dados salvos nos períodos e comparativos foram resetados.');
+            ->with('success', 'Ano letivo avançado com sucesso. PDFs salvos e dados resetados.');
     }
-
+    
     public function voltarAno()
     {
         // Obter IDs dos cursos que serão afetados antes das mudanças
@@ -103,5 +105,66 @@ class CursoController extends Controller
 
         return redirect()->route('admin.cursos.index')
             ->with('success', 'Ano letivo retrocedido com sucesso. Todos os dados salvos nos períodos e comparativos foram resetados. Nota: Os cursos do 3º ano excluídos anteriormente não foram restaurados.');
+    }
+
+    private function gerarPdfsAntesAvanco()
+    {
+        $cursos = Curso::all();
+
+        foreach ($cursos as $curso) {
+            // Buscar dados reais dos períodos
+            $dadosPeriodos = [];
+            for ($i = 1; $i <= 4; $i++) {
+                $dadosPeriodos[$i] = PeriodoDado::where('curso_id', $curso->id)
+                    ->where('periodo', $i)
+                    ->first();
+            }
+
+            // Buscar metas dos períodos
+            $metas = [];
+            for ($i = 1; $i <= 4; $i++) {
+                $metas[$i] = MetaPeriodo::firstOrNew([
+                    'curso_id' => $curso->id,
+                    'periodo' => $i
+                ], [
+                    'turma' => $curso->nome,
+                    'alunos' => 0,
+                    'media_geral' => 0,
+                    'infrequencia' => 0,
+                    'frequencia' => 0,
+                    'aprovacao_lp' => 0,
+                    'aprovacao_mt' => 0,
+                    'aprovacao_geral' => 0,
+                    'total_aprovados' => 0,
+                    'percentual_pt' => 0,
+                    'percentual_mat' => 0,
+                    'percentual_geral' => 0,
+                    'ide_sala' => 0
+                ]);
+            }
+
+            // Gerar PDF
+            $pdf = Pdf::loadView('periodos.comparativo-pdf', [
+                'curso' => $curso,
+                'ano' => $curso->ano,
+                'periodoNumero' => 4, // Último período
+                'periodo' => '4º Período',
+                'dadosPeriodos' => $dadosPeriodos,
+                'metas' => $metas
+            ])->setPaper('a4', 'landscape');
+
+            // Salvar PDF no storage
+            $filename = 'comparativo_' . $curso->nome . '_ano_' . $curso->ano . '_final_' . date('Y-m-d_H-i-s') . '.pdf';
+            Storage::put('pdfs/' . $filename, $pdf->output());
+        }
+    }
+
+    private function resetarDadosPeriodos()
+    {
+        // Limpar todos os dados dos períodos
+        PeriodoDado::truncate();
+
+        // Opcional: resetar metas também se necessário
+        // MetaPeriodo::truncate();
     }
 }

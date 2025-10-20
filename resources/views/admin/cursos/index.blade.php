@@ -2,11 +2,9 @@
 
 @section('title', 'Gerenciamento de Cursos')
 
-@section('content_header')
-    <h1>Gerenciamento dos Anos e Cursos</h1>
-@stop
 
 @section('content')
+<br>
     @if(session('success'))
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -59,6 +57,9 @@
         </div>
     </div>
     <div class="float-right">
+        <a href="{{ route('admin.pdfs.index') }}" class="btn btn-info">
+            <i class="fas fa-file-pdf"></i> Histórico de PDFs
+        </a>
         <a href="{{ route('admin.cursos.create') }}" class="btn btn-success">
             <i class="fas fa-plus"></i> Novo Curso
         </a>

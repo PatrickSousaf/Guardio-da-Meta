@@ -42,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
                     $periodosSubmenu = collect(range(1, $curso->periodos))->map(function ($periodo) use ($curso, $ano) {
                         return [
                             'text' => "{$periodo}º Período",
-                            'icon' => 'fas fa-fw fa-check',
+                            'icon' => 'fas fa-fw fa-check text-success',
                             'url'  => route('admin.periodos.show', [
                                 'curso' => $curso->id,
                                 'ano' => $ano,
@@ -54,7 +54,7 @@ class AppServiceProvider extends ServiceProvider
                     // Adiciona o menu Comparativo
                     $periodosSubmenu[] = [
                         'text' => 'Metas e Resultados',
-                        'icon' => 'fas fa-fw fa-poll-h',
+                        'icon' => 'fas fa-fw fa-poll-h text-warning',
                         'url'  => route('admin.periodos.comparativo', [
                             'curso' => $curso->id,
                             'ano' => $ano,
@@ -83,12 +83,6 @@ class AppServiceProvider extends ServiceProvider
                 // Menu de Perfil disponível para todos os usuários logados
                 $event->menu->add(['header' => 'Administração']);
 
-                $event->menu->add([
-                    'text' => 'Perfil',
-                    'url'  => route('profile.show'),
-                    'icon' => 'fas fa-fw fa-user',
-                ]);
-
                 // Apenas management e director podem acessar estas opções
                 if (Auth::user()->isManagement() || Auth::user()->isDirector()) {
                     $event->menu->add([
@@ -98,11 +92,23 @@ class AppServiceProvider extends ServiceProvider
                     ]);
 
                     $event->menu->add([
+                        'text' => 'Histórico de PDFs',
+                        'url'  => route('admin.pdfs.index'),
+                        'icon' => 'fas fa-fw fa-file-pdf',
+                    ]);
+
+                    $event->menu->add([
                         'text' => 'Registrar Usuário',
                         'url'  => route('register'),
                         'icon' => 'fas fa-fw fa-user-plus',
                     ]);
                 }
+
+                $event->menu->add([
+                    'text' => 'Perfil',
+                    'url'  => route('profile.show'),
+                    'icon' => 'fas fa-fw fa-user',
+                ]);
             }
         });
     }

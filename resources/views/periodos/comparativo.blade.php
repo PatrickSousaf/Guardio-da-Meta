@@ -22,7 +22,7 @@
 
 <div class="card shadow-sm">
     <div class="card-header bg-primary text-white">
-        <h3 class="card-title text-center w-100">Métrica das metas e resultados gerais: {{ $curso->nome }} </h3>
+        <h3 class="card-title text-center w-100">Metas e resultados gerais: {{ $curso->ano}}ª ano em {{ $curso->nome }}  </h3>
     </div>
     <div class="card-body p-2">
         <div class="table-responsive" style="overflow-x: auto;">
@@ -177,6 +177,9 @@
             @if(Auth::user()->isManagement() || Auth::user()->isDirector())
             <br>
             <div class="text-right">
+                <a href="{{ route('admin.periodos.gerar-pdf', ['curso' => $curso->id, 'ano' => $ano, 'periodo' => $periodo]) }}" class="btn btn-primary mr-2" target="_blank">
+                    <i class="fas fa-file-pdf"></i> Gerar PDF
+                </a>
                 <button onclick="toggleEditMode()" class="btn btn-success mr-2"><i class="fas fa-edit"></i> Editar Metas</button>
                 <button onclick="saveMetaData()" class="btn btn-success"><i class="fas fa-save"></i> Salvar Metas</button>
             </div>

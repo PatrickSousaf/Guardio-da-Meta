@@ -56,6 +56,16 @@ Route::prefix('admin')->name('admin.')->middleware('isManagementOrDirector')->gr
         ->name('cursos.avancar-ano');
     Route::post('cursos/voltar-ano', [\App\Http\Controllers\CursoController::class, 'voltarAno'])
         ->name('cursos.voltar-ano');
+
+    // Rotas para PDFs
+    Route::get('pdfs', [\App\Http\Controllers\PdfController::class, 'index'])
+        ->name('pdfs.index');
+    Route::get('pdfs/download/{filename}', [\App\Http\Controllers\PdfController::class, 'download'])
+        ->name('pdfs.download');
+    Route::delete('pdfs/delete/{filename}', [\App\Http\Controllers\PdfController::class, 'delete'])
+        ->name('pdfs.delete');
+    Route::delete('pdfs/delete-all', [\App\Http\Controllers\PdfController::class, 'deleteAll'])
+        ->name('pdfs.deleteAll');
 });
 
 // JUNTE TODAS AS ROTAS DO PERIODOCONTROLLER EM UM ÚNICO GRUPO
@@ -79,6 +89,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('periodos/salvar-metas', [PeriodoController::class, 'salvarMetas'])
         ->name('periodos.salvar-metas')
         ->middleware('isManagementOrDirector');
+
+    // Rota para gerar PDF do comparativo
+    Route::get('cursos/{curso}/ano/{ano}/periodo/{periodo}/pdf', [PeriodoController::class, 'gerarPdf'])
+        ->name('periodos.gerar-pdf');
 });
 
 Route::post('/periodos/importar-csv', [PlanilhaController::class, 'importar'])

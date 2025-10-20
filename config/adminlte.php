@@ -322,6 +322,12 @@ return [
             'url' => 'admin/blog',
             'can' => 'manage-blog',
         ],
+        [
+            'text' => 'Histórico de PDFs',
+            'url' => 'admin/pdfs',
+            'icon' => 'fas fa-fw fa-file-pdf',
+            'can' => 'manage-blog',
+        ],
         /*[
             'text' => 'pages',
             'url' => 'admin/pages',
