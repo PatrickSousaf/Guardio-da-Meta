@@ -30,6 +30,15 @@
                         <option value="4" {{ $curso->periodos == 4 ? 'selected' : '' }}>4 Períodos</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="turma">Turma</label>
+                    <select class="form-control" id="turma" name="turma" required>
+                        <option value="A" {{ $curso->turma == 'A' ? 'selected' : '' }}>A</option>
+                        <option value="B" {{ $curso->turma == 'B' ? 'selected' : '' }}>B</option>
+                        <option value="C" {{ $curso->turma == 'C' ? 'selected' : '' }}>C</option>
+                        <option value="D" {{ $curso->turma == 'D' ? 'selected' : '' }}>D</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-primary">Atualizar</button>
                 <a href="{{ route('admin.cursos.index') }}" class="btn btn-default">Cancelar</a>
             </form>

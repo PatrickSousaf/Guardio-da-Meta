@@ -200,7 +200,7 @@ class PeriodoController extends Controller
             'periodo',
             'dadosPeriodos',
             'metas'
-        ))->setPaper('a4', 'landscape');
+        ))->setPaper('a4', 'landscape')->setOptions(['defaultFont' => 'sans-serif']);
 
         return $pdf->download('comparativo_' . $curso->nome . '_ano_' . $ano . '_periodo_' . $periodo . '.pdf');
     }

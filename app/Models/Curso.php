@@ -12,6 +12,7 @@ class Curso extends Model
     protected $fillable = [
         'nome',
         'ano',
-        'periodos'
+        'periodos',
+        'turma'
     ];
 }

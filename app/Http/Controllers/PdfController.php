@@ -70,6 +70,72 @@ class PdfController extends Controller
             ->with('success', 'PDF excluído com sucesso.');
     }
 
+    public function showAno($ano)
+    {
+        // Listar PDFs de um ano específico
+        $pdfs = [];
+
+        if (Storage::exists('pdfs')) {
+            $files = Storage::files('pdfs');
+
+            foreach ($files as $file) {
+                $filename = basename($file);
+                $path = storage_path('app/' . $file);
+
+                if (preg_match('/comparativo_(.+)_ano_(\d+)_final_(.+)\.pdf/', $filename, $matches)) {
+                    $cursoNome = $matches[1];
+                    $anoPdf = $matches[2];
+                    $data = $matches[3];
+
+                    if ($anoPdf == $ano) {
+                        $pdfs[] = [
+                            'filename' => $filename,
+                            'curso_nome' => str_replace('_', ' ', $cursoNome),
+                            'ano' => $ano,
+                            'data' => $data,
+                            'size' => Storage::size($file),
+                            'url' => route('admin.pdfs.download', $filename)
+                        ];
+                    }
+                }
+            }
+
+            // Ordenar por data decrescente (mais recentes primeiro)
+            usort($pdfs, function($a, $b) {
+                return strtotime($b['data']) <=> strtotime($a['data']);
+            });
+        }
+
+        return view('admin.pdfs.ano', compact('pdfs', 'ano'));
+    }
+
+    public function deleteAllAno($ano)
+    {
+        $files = Storage::files('pdfs');
+
+        if (empty($files)) {
+            return redirect()->route('admin.pdfs.ano', $ano)
+                ->with('info', 'Nenhum PDF para excluir.');
+        }
+
+        $deletedCount = 0;
+        foreach ($files as $file) {
+            $filename = basename($file);
+
+            if (preg_match('/comparativo_(.+)_ano_(\d+)_final_(.+)\.pdf/', $filename, $matches)) {
+                $anoPdf = $matches[2];
+
+                if ($anoPdf == $ano) {
+                    Storage::delete($file);
+                    $deletedCount++;
+                }
+            }
+        }
+
+        return redirect()->route('admin.pdfs.ano', $ano)
+            ->with('success', "{$deletedCount} PDF(s) do {$ano}º ano excluído(s) com sucesso.");
+    }
+
     public function deleteAll()
     {
         $files = Storage::files('pdfs');

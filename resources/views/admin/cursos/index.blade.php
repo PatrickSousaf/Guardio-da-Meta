@@ -20,6 +20,7 @@
                     <tr>
                         <th>Nome</th>
                         <th>Ano</th>
+                        <th>Turma</th>
                         <th>Períodos</th>
                         <th>Ações</th>
                     </tr>
@@ -29,6 +30,7 @@
                     <tr>
                         <td>{{ $curso->nome }}</td>
                         <td>{{ $curso->ano }}º Ano</td>
+                        <td>{{ $curso->turma }}</td>
                         <td>{{ $curso->periodos }}</td>
                         <td>
                             <a href="{{ route('admin.cursos.edit', $curso->id) }}" class="btn btn-info btn-sm">
@@ -68,13 +70,6 @@
             <button type="submit" class="btn btn-primary"
                     onclick="return confirm('Tem certeza que deseja avançar o ano letivo? Os 3º anos serão EXCLUÍDOS e não poderão ser recuperados!')">
                 <i class="fas fa-forward"></i> Avançar Ano
-            </button>
-        </form>
-        <form action="{{ route('admin.cursos.voltar-ano') }}" method="POST" style="display: inline;">
-            @csrf
-            <button type="submit" class="btn btn-warning"
-                    onclick="return confirm('Tem certeza que deseja voltar o ano letivo? Nota: Os cursos do 3º ano excluídos não serão restaurados.')">
-                <i class="fas fa-backward"></i> Voltar Ano
             </button>
         </form>
     </div>

@@ -29,6 +29,15 @@
                         <option value="4">4 Períodos</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="turma">Turma</label>
+                    <select class="form-control" id="turma" name="turma" required>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-primary">Salvar</button>
                 <a href="{{ route('admin.cursos.index') }}" class="btn btn-default">Cancelar</a>
             </form>

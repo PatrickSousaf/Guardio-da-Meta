@@ -12,29 +12,29 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border-bottom: 2px solid #007bff;
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
         .header h1 {
             color: #007bff;
             margin: 0;
-            font-size: 24px;
+            font-size: 20px;
         }
         .header p {
-            margin: 5px 0;
-            font-size: 16px;
+            margin: 3px 0;
+            font-size: 14px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 10px;
+            padding: 6px;
             text-align: center;
-            font-size: 14px;
+            font-size: 12px;
         }
         th {
             background-color: #f8f9fa;
@@ -109,24 +109,20 @@
                 }
             }
         }
+
+        // Codificar logo em base64 para o PDF
+        $logoPath = public_path('assets/img/logo_eep.png');
+        $logoData = file_exists($logoPath) ? base64_encode(file_get_contents($logoPath)) : '';
+        $logoSrc = 'data:image/png;base64,' . $logoData;
     @endphp
 
     <!-- Cabeçalho -->
-    <table style="width: 100%; border: none; margin-bottom: 20px;">
-        <tr>
-            <td style="width: 20%; text-align: left;">
-                <img src="{{ public_path('assets/img/logo_eep.png') }}" alt="Logo EEP" style="max-width: 80px;">
-            </td>
-            <td style="width: 60%; text-align: center;">
-                <h2 style="margin: 0; color: #228a33;">E.E.E.P. DR. JOSÉ ALVES DA SILVEIRA</h2>
-                <h3 style="margin: 5px 0; color: #333;">{{ $curso->nome }}</h3>
-                <p style="margin: 0; font-size: 14px;">Comparativo Meta vs Resultado - {{ $curso->ano }}ª ano</p>
-            </td>
-            <td style="width: 20%; text-align: right;">
-                <!-- Espaço para outros elementos se necessário -->
-            </td>
-        </tr>
-    </table>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="{{ $logoSrc }}" alt="Logo EEP" style="max-width: 80px; margin-bottom: 10px;">
+        <h2 style="margin: 0; color: #228a33;">E.E.E.P. DR. JOSÉ ALVES DA SILVEIRA</h2>
+        <h3 style="margin: 5px 0; color: #333;">{{ $curso->ano }}º Série {{ $curso->turma }} - Curso Técnico em {{ $curso->nome }}</h3>
+        <p style="margin: 0; font-size: 14px;">Comparativo Meta vs Resultado - {{ date('Y') }}</p>
+    </div>
 
     <table>
         <thead>
@@ -212,19 +208,18 @@
     </table>
 
     <!-- Legenda das Cores -->
-    <div style="margin-top: 30px; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
-        <h5 style="margin-bottom: 10px; color: #495057;">Legenda das Cores</h5>
-        <div style="display: inline-block; margin-right: 20px; margin-bottom: 10px;">
+    <div style="margin-top: 25px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; font-size: 12px;">
+        <div style="display: inline-block; margin-right: 40px;">
             <span style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; background-color: #d4edda; color: #155724;">Verde</span>
-            <span>Resultado atingiu ou superou a meta</span>
+            <span style="margin-left: 10px;">Resultado atingiu ou superou a meta</span>
         </div>
-        <div style="display: inline-block; margin-right: 20px; margin-bottom: 10px;">
+        <div style="display: inline-block; margin-right: 40px;">
             <span style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; background-color: #fff3cd; color: #856404;">Amarelo</span>
-            <span>Resultado abaixo da meta</span>
+            <span style="margin-left: 10px;">Resultado abaixo da meta</span>
         </div>
-        <div style="display: inline-block; margin-right: 20px; margin-bottom: 10px;">
+        <div style="display: inline-block;">
             <span style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; background-color: #e2e3e5; color: #383d41;">Cinza</span>
-            <span>Dados não criados ainda</span>
+            <span style="margin-left: 10px;">Dados não criados ainda</span>
         </div>
     </div>
 </body>

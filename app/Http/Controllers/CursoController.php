@@ -15,7 +15,7 @@ class CursoController extends Controller
     {
        \Log::info('CursoController@index accessed');
 
-    $cursos = Curso::orderBy('ano')->orderBy('nome')->get();
+    $cursos = Curso::orderBy('ano')->orderBy('turma')->orderBy('nome')->get();
 
     // Debug: verifique os dados
     \Log::info('Cursos count: ' . $cursos->count());
@@ -33,7 +33,8 @@ class CursoController extends Controller
         $request->validate([
             'nome' => 'required|string|max:255',
             'ano' => 'required|integer|between:1,3',
-            'periodos' => 'required|integer|between:1,4'
+            'periodos' => 'required|integer|between:1,4',
+            'turma' => 'required|string|in:A,B,C,D'
         ]);
 
         Curso::create($request->all());
@@ -52,7 +53,8 @@ class CursoController extends Controller
         $request->validate([
             'nome' => 'required|string|max:255',
             'ano' => 'required|integer|between:1,3',
-            'periodos' => 'required|integer|between:1,4'
+            'periodos' => 'required|integer|between:1,4',
+            'turma' => 'required|string|in:A,B,C,D'
         ]);
 
         $curso->update($request->all());
@@ -86,26 +88,8 @@ class CursoController extends Controller
         return redirect()->route('admin.cursos.index')
             ->with('success', 'Ano letivo avançado com sucesso. PDFs salvos e dados resetados.');
     }
-    
-    public function voltarAno()
-    {
-        // Obter IDs dos cursos que serão afetados antes das mudanças
-        $cursosParaResetar = Curso::whereIn('ano', [2, 3])->pluck('id')->toArray();
 
-        // Voltar os anos: 2º ano vira 1º, 3º vira 2º
-        Curso::where('ano', 2)->update(['ano' => 1]);
-        Curso::where('ano', 3)->update(['ano' => 2]);
 
-        // Resetar dados dos períodos e metas para os cursos afetados
-        PeriodoDado::whereIn('curso_id', $cursosParaResetar)->delete();
-        MetaPeriodo::whereIn('curso_id', $cursosParaResetar)->delete();
-
-        // Nota: Não recriamos os cursos do 3º ano que foram excluídos no avanço
-        // pois não temos como saber quais eram
-
-        return redirect()->route('admin.cursos.index')
-            ->with('success', 'Ano letivo retrocedido com sucesso. Todos os dados salvos nos períodos e comparativos foram resetados. Nota: Os cursos do 3º ano excluídos anteriormente não foram restaurados.');
-    }
 
     private function gerarPdfsAntesAvanco()
     {

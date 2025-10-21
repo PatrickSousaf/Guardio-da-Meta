@@ -54,16 +54,18 @@ Route::prefix('admin')->name('admin.')->middleware('isManagementOrDirector')->gr
     Route::resource('cursos', \App\Http\Controllers\CursoController::class)->except(['index', 'show']);
     Route::post('cursos/avancar-ano', [\App\Http\Controllers\CursoController::class, 'avancarAno'])
         ->name('cursos.avancar-ano');
-    Route::post('cursos/voltar-ano', [\App\Http\Controllers\CursoController::class, 'voltarAno'])
-        ->name('cursos.voltar-ano');
 
     // Rotas para PDFs
     Route::get('pdfs', [\App\Http\Controllers\PdfController::class, 'index'])
         ->name('pdfs.index');
+    Route::get('pdfs/ano/{ano}', [\App\Http\Controllers\PdfController::class, 'showAno'])
+        ->name('pdfs.ano');
     Route::get('pdfs/download/{filename}', [\App\Http\Controllers\PdfController::class, 'download'])
         ->name('pdfs.download');
     Route::delete('pdfs/delete/{filename}', [\App\Http\Controllers\PdfController::class, 'delete'])
         ->name('pdfs.delete');
+    Route::delete('pdfs/delete-all-ano/{ano}', [\App\Http\Controllers\PdfController::class, 'deleteAllAno'])
+        ->name('pdfs.deleteAllAno');
     Route::delete('pdfs/delete-all', [\App\Http\Controllers\PdfController::class, 'deleteAll'])
         ->name('pdfs.deleteAll');
 });

@@ -9,23 +9,38 @@ class CursosTableSeeder extends Seeder
 {
     public function run()
     {
-        $cursos = [
-            ['nome' => 'Administração', 'ano' => 1, 'periodos' => 4],
-            ['nome' => 'Desenvolvimento de Sistemas', 'ano' => 1, 'periodos' => 4],
-            ['nome' => 'Edificações', 'ano' => 1, 'periodos' => 4],
-            ['nome' => 'Informática', 'ano' => 1, 'periodos' => 4],
-            ['nome' => 'Administração', 'ano' => 2, 'periodos' => 4],
-            ['nome' => 'Edificações', 'ano' => 2, 'periodos' => 4],
-            ['nome' => 'Informática', 'ano' => 2, 'periodos' => 4],
-            ['nome' => 'Nutrição', 'ano' => 2, 'periodos' => 4],
-            ['nome' => 'Agronegócio', 'ano' => 3, 'periodos' => 4],
-            ['nome' => 'Edificações', 'ano' => 3, 'periodos' => 4],
-            ['nome' => 'Informática', 'ano' => 3, 'periodos' => 4],
-            ['nome' => 'Nutrição', 'ano' => 3, 'periodos' => 4],
+        $cursosPorAno = [
+            1 => [
+                'Administração',
+                'Desenvolvimento de Sistemas',
+                'Edificações',
+                'Informática'
+            ],
+            2 => [
+                'Administração',
+                'Edificações',
+                'Informática',
+                'Nutrição'
+            ],
+            3 => [
+                'Agronegócio',
+                'Edificações',
+                'Informática',
+                'Nutrição'
+            ]
         ];
 
-        foreach ($cursos as $curso) {
-            Curso::create($curso);
+        $turmas = ['A', 'B', 'C', 'D'];
+
+        foreach ($cursosPorAno as $ano => $nomes) {
+            foreach ($nomes as $index => $nome) {
+                Curso::create([
+                    'nome' => $nome,
+                    'ano' => $ano,
+                    'periodos' => 4,
+                    'turma' => $turmas[$index]
+                ]);
+            }
         }
     }
 }
